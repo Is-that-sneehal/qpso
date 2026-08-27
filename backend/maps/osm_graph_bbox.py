@@ -1,5 +1,6 @@
 import os
 import hashlib
+import numpy as np
 import osmnx as ox
 
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data", "cached_graphs")

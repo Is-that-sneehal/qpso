@@ -39,11 +39,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-bold text-lg tracking-tight text-[#e9def5]">Quantum Route</span>
-            {currentTab === 'dashboard' && (
-              <span className="text-xs text-[#e6beb2] font-normal pl-1 border-l border-[#5c4037]/50 ml-1">
-                Dashboard
-              </span>
-            )}
           </div>
         </div>
 
