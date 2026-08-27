@@ -80,16 +80,21 @@ async def optimize_route(req: OptimizeRequest):
             telemetry_callback=None # background streaming handled via API
         )
         
-        # Calculate distance and duration for vehicle
-        v_dist_km = 0.0
-        v_time_min = 0.0
-        for i in range(len(opt_nodes) - 1):
-            c1, c2 = opt_nodes[i]['coords'], opt_nodes[i+1]['coords']
+        # Calculate distance, duration, and road geometry for vehicle
+        coords_seq = [list(n["coords"]) for n in opt_nodes]
+        try:
+            from api import get_road_path
+            path_res = get_road_path(coords_seq)
+            if len(path_res) == 4:
+                path_geo, v_dist_km, v_time_min, is_fallback = path_res
+            else:
+                path_geo, v_dist_km, v_time_min = path_res
+        except Exception as e:
             from geopy.distance import geodesic
-            d = geodesic(c1, c2).km * 1.2
-            v_dist_km += d
-            v_time_min += (d / 45.0) * 60.0 # avg speed 45 km/h
-            
+            v_dist_km = sum(geodesic(coords_seq[i], coords_seq[i+1]).km * 1.2 for i in range(len(coords_seq)-1))
+            v_time_min = (v_dist_km / 45.0) * 60.0
+            path_geo = coords_seq
+
         total_dist_km += v_dist_km
         total_time_min += v_time_min
         
@@ -103,7 +108,7 @@ async def optimize_route(req: OptimizeRequest):
         routes_output.append({
             "vehicle_id": v_idx + 1,
             "stops": [{"name": n["name"], "coords": list(n["coords"]), "window": n.get("window")} for n in opt_nodes],
-            "geometry": [list(n["coords"]) for n in opt_nodes]
+            "geometry": path_geo if path_geo else coords_seq
         })
         
         combined_history.extend(stats.get("history", []))
