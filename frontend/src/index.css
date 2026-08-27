@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-surface: #161120;
+    --color-surface-dim: #161120;
+    --color-surface-bright: #3c3647;
+    --color-surface-container-lowest: #110b1b;
+    --color-surface-container-low: #1e1929;
+    --color-surface-container: #221d2d;
+    --color-surface-container-high: #2d2738;
+    --color-surface-container-highest: #383243;
+    --color-on-surface: #e9def5;
+    --color-on-surface-variant: #e6beb2;
+    --color-outline: #ac897e;
+    --color-outline-variant: #5c4037;
+    --color-primary: #ffb59e;
+    --color-on-primary: #5e1700;
+    --color-primary-container: #ff5719;
+    --color-on-primary-container: #521300;
+    --color-secondary: #d0bcff;
+    --color-secondary-container: #6000e3;
+    --color-tertiary: #9dcaff;
+    --color-tertiary-container: #3c95e4;
+    --color-background: #161120;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom Quantum Midnight Utilities */
+.bg-surface-lowest { background-color: var(--color-surface-container-lowest); }
+.bg-surface-low { background-color: var(--color-surface-container-low); }
+.bg-surface-card { background-color: var(--color-surface-container); }
+.bg-surface-high { background-color: var(--color-surface-container-high); }
+
+.border-outline-var { border-color: var(--color-outline-variant); }
+
+.text-primary-ember { color: var(--color-primary); }
+.text-tertiary-blue { color: var(--color-tertiary); }
+.text-on-surface-muted { color: var(--color-on-surface-variant); }
+
+/* Ember Gradient Button */
+.btn-ember-gradient {
+  background: linear-gradient(135deg, var(--color-primary-container) 0%, var(--color-primary) 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(255, 87, 25, 0.35);
+  transition: all 0.2s ease-in-out;
+}
+.btn-ember-gradient:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(255, 87, 25, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Quantum Glow Card */
+.quantum-glow-card {
+  background-color: var(--color-surface-container);
+  border: 1px solid var(--color-outline-variant);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(17, 11, 27, 0.6);
+  position: relative;
+}
+
+.quantum-glow-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary-container), transparent);
+  opacity: 0.4;
+}
+
+/* Leaflet dark map fixes */
+.leaflet-container {
+  background-color: #110b1b !important;
+  font-family: inherit;
+}
+.leaflet-popup-content-wrapper {
+  background: #1e1929 !important;
+  color: #e9def5 !important;
+  border: 1px solid #5c4037 !important;
+  border-radius: 8px !important;
+}
+.leaflet-popup-tip {
+  background: #1e1929 !important;
+}
