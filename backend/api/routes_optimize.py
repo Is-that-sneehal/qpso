@@ -28,6 +28,7 @@ class OptimizeRequest(BaseModel):
     mileage_kml: Optional[float] = 12.0
     fuel_price_inr: Optional[float] = 96.0
     qpso_params: Optional[dict] = None    # {swarm_size, max_iter, beta_start, beta_end, plateau_window}
+    optimizer: Optional[str] = "default"  # Feature flag: 'default' | 'qpso_v2'
 
 @router.post("/optimize")
 async def optimize_route(req: OptimizeRequest):
@@ -73,12 +74,20 @@ async def optimize_route(req: OptimizeRequest):
         def sync_telemetry_cb(event):
             asyncio.run(ws_manager.broadcast(run_id, event))
             
-        opt_nodes, stats = run_qpso(
-            nodes, dist_mat, time_mat,
-            round_trip=req.round_trip,
-            qpso_params=req.qpso_params,
-            telemetry_callback=None # background streaming handled via API
-        )
+        if req.optimizer == "qpso_v2":
+            from qpso import optimize_route_qpso_v2, QPSOConfig
+            cfg = QPSOConfig.from_dict(req.qpso_params) if req.qpso_params else None
+            opt_routes, stats = optimize_route_qpso_v2(
+                start_node, cluster, round_trip=req.round_trip, fleet_size=1, qpso_config=cfg
+            )
+            opt_nodes = opt_routes[0] if opt_routes else nodes
+        else:
+            opt_nodes, stats = run_qpso(
+                nodes, dist_mat, time_mat,
+                round_trip=req.round_trip,
+                qpso_params=req.qpso_params,
+                telemetry_callback=None # background streaming handled via API
+            )
         
         # Calculate distance, duration, and road geometry for vehicle
         coords_seq = [list(n["coords"]) for n in opt_nodes]
