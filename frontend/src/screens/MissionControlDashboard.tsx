@@ -28,67 +28,40 @@ export const MissionControlDashboard: React.FC<DashboardProps> = ({
   return (
     <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-10">
       
-      {/* 1. Hero Split Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        
-        {/* Left Column: Hero Text */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ff5719]/10 border border-[#ff5719]/30 text-xs font-mono text-[#ffb59e]">
-            <span className="w-2 h-2 rounded-full bg-[#ff5719] animate-pulse"></span>
-            <span>NEXT-GEN ROUTE OPTIMIZATION ENGINE</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-bold tracking-tight text-[#e9def5] whitespace-normal sm:whitespace-nowrap leading-tight">
-            Intelligence at the{' '}
-            <span className="bg-gradient-to-r from-[#ff5719] via-[#ffb59e] to-[#9dcaff] bg-clip-text text-transparent">
-              speed of light
-            </span>
-          </h1>
-
-          <p className="text-base md:text-lg text-[#e6beb2]/80 leading-relaxed max-w-xl">
-            Next-generation route optimization powered by quantum-inspired algorithms. Navigate chaos with pinpoint precision under real-world traffic dynamics.
-          </p>
-
-          <div className="flex items-center gap-4 pt-2">
-            <button
-              onClick={onNavigateToSimulation}
-              className="btn-ember-gradient px-6 py-3 text-sm font-semibold flex items-center gap-2"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Deploy Engine</span>
-            </button>
-            <button
-              onClick={onNavigateToEngine}
-              className="px-6 py-3 text-sm font-semibold rounded-lg border border-[#5c4037] text-[#e9def5] hover:bg-[#221d2d] transition flex items-center gap-2"
-            >
-              <BarChart2 className="w-4 h-4 text-[#9dcaff]" />
-              <span>View Engine Tuning</span>
-            </button>
-          </div>
+      {/* 1. Hero Layout */}
+      <div className="w-full space-y-6">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5719]/10 border border-[#ff5719]/30 text-xs font-mono text-[#ffb59e]">
+          <span className="w-2 h-2 rounded-full bg-[#ff5719] animate-pulse"></span>
+          <span>NEXT-GEN ROUTE OPTIMIZATION ENGINE</span>
         </div>
 
-        {/* Right Column: QPSO Telemetry Panel */}
-        <div className="lg:col-span-5">
-          <div className="quantum-glow-card rounded-2xl p-6 relative overflow-hidden">
-            <div className="flex items-center justify-between border-b border-[#5c4037]/30 pb-4 mb-4">
-              <span className="text-xs font-mono text-[#ffb59e] tracking-wider uppercase">QPSO DELTA-POTENTIAL ENGINE</span>
-              <span className="text-xs font-mono text-[#9dcaff] bg-[#110b1b] px-2.5 py-1 rounded border border-[#5c4037]">4,092 NODES</span>
-            </div>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-bold tracking-tight text-[#e9def5] leading-tight">
+          Intelligence at the{' '}
+          <span className="bg-gradient-to-r from-[#ff5719] via-[#ffb59e] to-[#9dcaff] bg-clip-text text-transparent">
+            speed of light
+          </span>
+        </h1>
 
-            {/* Particle HUD Canvas Graphic */}
-            <div className="h-56 bg-[#110b1b] rounded-xl border border-[#5c4037]/50 flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(#ff5719_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-              <div className="relative z-10 text-center space-y-2">
-                <div className="w-16 h-16 rounded-full border-2 border-[#ff5719] border-t-transparent animate-spin mx-auto flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full border-2 border-[#9dcaff] border-b-transparent animate-spin"></div>
-                </div>
-                <div className="text-xs font-mono text-[#e9def5]">QPSO Delta-Potential Well Active</div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/60">Latency: 12ms | Convergence: 99.8%</div>
-              </div>
-            </div>
-          </div>
+        <p className="text-base md:text-xl text-[#e6beb2]/80 leading-relaxed max-w-3xl">
+          Next-generation route optimization powered by quantum-inspired algorithms. Navigate chaos with pinpoint precision under real-world traffic dynamics.
+        </p>
+
+        <div className="flex items-center gap-4 pt-2">
+          <button
+            onClick={onNavigateToSimulation}
+            className="btn-ember-gradient px-7 py-3.5 text-sm font-semibold flex items-center gap-2"
+          >
+            <Play className="w-4 h-4 fill-white" />
+            <span>Deploy Engine</span>
+          </button>
+          <button
+            onClick={onNavigateToEngine}
+            className="px-7 py-3.5 text-sm font-semibold rounded-lg border border-[#5c4037] text-[#e9def5] hover:bg-[#221d2d] transition flex items-center gap-2"
+          >
+            <BarChart2 className="w-4 h-4 text-[#9dcaff]" />
+            <span>View Engine Tuning</span>
+          </button>
         </div>
-
       </div>
 
       {/* 2. Three Stat Cards Side-by-Side */}
