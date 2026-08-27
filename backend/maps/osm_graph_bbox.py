@@ -1,7 +1,10 @@
 import os
 import hashlib
 import numpy as np
-import osmnx as ox
+try:
+    import osmnx as ox
+except ImportError:
+    ox = None
 
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data", "cached_graphs")
 os.makedirs(CACHE_DIR, exist_ok=True)
@@ -11,7 +14,7 @@ def load_bbox_graph(points, pad_km=2.0):
     Loads or fetches a scoped OSMnx graph covering points with padding.
     Caches graph locally as GraphML to avoid repeated Overpass calls.
     """
-    if not points:
+    if not points or ox is None:
         return None, 0, 0
         
     lats = [p['lat'] if isinstance(p, dict) else p[0] for p in points]
