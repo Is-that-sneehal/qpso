@@ -38,9 +38,9 @@ export const MissionControlDashboard: React.FC<DashboardProps> = ({
             <span>NEXT-GEN ROUTE OPTIMIZATION ENGINE</span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-[54px] font-light leading-[0.95] tracking-tight text-[#e9def5]">
-            Intelligence at the <br />
-            <span className="bg-gradient-to-r from-[#ff5719] via-[#e6beb2] to-[#9dcaff] bg-clip-text text-transparent font-normal">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-bold tracking-tight text-[#e9def5] whitespace-normal sm:whitespace-nowrap leading-tight">
+            Intelligence at the{' '}
+            <span className="bg-gradient-to-r from-[#ff5719] via-[#ffb59e] to-[#9dcaff] bg-clip-text text-transparent">
               speed of light
             </span>
           </h1>
@@ -67,11 +67,11 @@ export const MissionControlDashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Quantum Network Visual Panel */}
+        {/* Right Column: QPSO Telemetry Panel */}
         <div className="lg:col-span-5">
           <div className="quantum-glow-card rounded-2xl p-6 relative overflow-hidden">
             <div className="flex items-center justify-between border-b border-[#5c4037]/30 pb-4 mb-4">
-              <span className="text-xs font-mono text-[#ffb59e] tracking-wider uppercase">QUANTUM NETWORK STATUS: ACTIVE</span>
+              <span className="text-xs font-mono text-[#ffb59e] tracking-wider uppercase">QPSO DELTA-POTENTIAL ENGINE</span>
               <span className="text-xs font-mono text-[#9dcaff] bg-[#110b1b] px-2.5 py-1 rounded border border-[#5c4037]">4,092 NODES</span>
             </div>
 

@@ -93,7 +93,7 @@ def run_qpso(nodes, dist_matrix, time_matrix, round_trip=False, qpso_params=None
         history.append(float(gbest_fitness))
         
         # Swarm diversity metric: mean distance to mbest
-        diversity = float(np.mean(np.linalg_norm(X - mbest, axis=1)))
+        diversity = float(np.mean(np.linalg.norm(X - mbest, axis=1)))
         diversity_history.append(diversity)
         
         elapsed_ms = (time.time() - start_time) * 1000.0

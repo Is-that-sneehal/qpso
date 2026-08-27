@@ -34,18 +34,53 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
     { id: 'tokyo-hub', label: 'Simulating: Tokyo Hub', status: 'STANDBY', color: 'text-[#e6beb2]/60' }
   ];
 
+  const [intermediateStops, setIntermediateStops] = useState<{ name: string; coords: [number, number] }[]>([]);
+
+  const handleAddStop = () => {
+    setIntermediateStops([
+      ...intermediateStops,
+      { name: 'Central Park, NY', coords: [40.785091, -73.968285] }
+    ]);
+  };
+
+  const handleRemoveStop = (idx: number) => {
+    setIntermediateStops(intermediateStops.filter((_, i) => i !== idx));
+  };
+
+  const handleUpdateStop = (idx: number, loc: { name: string; coords: [number, number] }) => {
+    const updated = [...intermediateStops];
+    updated[idx] = loc;
+    setIntermediateStops(updated);
+  };
+
   const handleRunOptimization = async (presetOverride?: string) => {
     setLoading(true);
     try {
-      const activePreset = presetOverride || selectedPreset;
-      const res = await runOptimization({
-        preset: activePreset,
-        start_location: startLocation,
-        vehicle_count: vehicleCount,
-        round_trip: roundTrip,
-        qpso_params: qpsoParams
-      });
-      setOptimizationResult(res);
+      if (presetOverride) {
+        // Run preset optimization
+        const res = await runOptimization({
+          preset: presetOverride,
+          vehicle_count: vehicleCount,
+          round_trip: roundTrip,
+          qpso_params: qpsoParams
+        });
+        setOptimizationResult(res);
+      } else {
+        // Build custom stops list from intermediateStops + destinationLocation
+        const allStops = [
+          ...intermediateStops,
+          { name: destinationLocation.name, coords: destinationLocation.coords }
+        ];
+
+        const res = await runOptimization({
+          start_location: startLocation,
+          stops: allStops,
+          vehicle_count: vehicleCount,
+          round_trip: roundTrip,
+          qpso_params: qpsoParams
+        });
+        setOptimizationResult(res);
+      }
     } catch (err) {
       console.error("Optimization error:", err);
     } finally {
@@ -66,31 +101,68 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
     <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-6">
       
       {/* Search Header Bar (Section 4.1 Global Search) */}
-      <div className="quantum-glow-card p-4 rounded-xl flex flex-col md:flex-row items-center gap-4">
-        <div className="w-full md:w-1/2">
-          <LocationSearchInput
-            label="Origin (From)"
-            placeholder="Type any origin address or city on Earth..."
-            value={startLocation.name}
-            onSelectLocation={(loc) => setStartLocation(loc)}
-          />
+      <div className="quantum-glow-card p-4 rounded-xl space-y-4">
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="w-full md:w-1/2">
+            <LocationSearchInput
+              label="Origin (From)"
+              placeholder="Type any origin address or city on Earth..."
+              value={startLocation.name}
+              onSelectLocation={(loc) => setStartLocation(loc)}
+            />
+          </div>
+          <div className="w-full md:w-1/2">
+            <LocationSearchInput
+              label="Destination (To)"
+              placeholder="Type destination..."
+              value={destinationLocation.name}
+              onSelectLocation={(loc) => setDestinationLocation(loc)}
+            />
+          </div>
+          <div className="w-full md:w-auto flex items-end gap-2">
+            <button
+              onClick={() => handleRunOptimization()}
+              disabled={loading}
+              className="w-full md:w-auto btn-ember-gradient px-6 py-2.5 text-xs uppercase font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0"
+            >
+              {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-white" />}
+              <span>{loading ? 'Optimizing...' : 'Run Quantum Router'}</span>
+            </button>
+          </div>
         </div>
-        <div className="w-full md:w-1/2">
-          <LocationSearchInput
-            label="Destination (To)"
-            placeholder="Type destination..."
-            value={destinationLocation.name}
-            onSelectLocation={(loc) => setDestinationLocation(loc)}
-          />
-        </div>
-        <div className="w-full md:w-auto flex items-end">
+
+        {/* Intermediate Waypoints (if any) */}
+        {intermediateStops.length > 0 && (
+          <div className="space-y-3 pt-3 border-t border-[#5c4037]/30">
+            <div className="text-xs font-mono text-[#ffb59e] uppercase">Intermediate Waypoints</div>
+            {intermediateStops.map((stop, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <div className="flex-1">
+                  <LocationSearchInput
+                    label={`Waypoint ${idx + 1}`}
+                    placeholder="Type intermediate stop address..."
+                    value={stop.name}
+                    onSelectLocation={(loc) => handleUpdateStop(idx, loc)}
+                  />
+                </div>
+                <button
+                  onClick={() => handleRemoveStop(idx)}
+                  className="mt-5 p-2 rounded-lg bg-[#110b1b] border border-[#ff4444]/40 text-[#ff6666] hover:bg-[#ff4444]/10 transition"
+                  title="Remove Waypoint"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-start">
           <button
-            onClick={() => handleRunOptimization()}
-            disabled={loading}
-            className="w-full md:w-auto btn-ember-gradient px-6 py-2.5 text-xs uppercase font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0"
+            onClick={handleAddStop}
+            className="text-xs font-mono text-[#9dcaff] hover:text-[#e9def5] flex items-center gap-1.5 transition"
           >
-            {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-white" />}
-            <span>{loading ? 'Optimizing...' : 'Run Quantum Router'}</span>
+            <span>+ Add Intermediate Waypoint</span>
           </button>
         </div>
       </div>
