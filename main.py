@@ -28,17 +28,15 @@ if go_btn:
     else:
         with st.status("🚀 Initiating Quantum Sequence...", expanded=True) as status:
             st.write("⚡ Initializing energy landscape...")
-            time.sleep(0.6)
+            time.sleep(0.4)
             st.write("⚛️ Tunneling through local minima...")
-            time.sleep(0.6)
+            time.sleep(0.4)
             st.write("🔄 Converging on optimal route...")
             
             st.session_state.is_round_trip_active = is_round_trip
             st.session_state.solver_status = "Running"
             
             # --- CALL QUANTUM SOLVER ---
-            # Logic returns the full ordered list. 
-            # If round_trip=True, the last node in sorted_nodes is the Start Node.
             routes_list, stats = logic.optimize_route_algo(
                 start_loc, 
                 st.session_state.stops_data, 
@@ -54,15 +52,28 @@ if go_btn:
             all_markers = []
             all_coords = []
             vehicle_metrics = []
+            any_fallback = False
             
             for v_idx, route_nodes in enumerate(routes_list):
                 # Get Geometry for this specific vehicle route
                 coords_seq = [n['coords'] for n in route_nodes]
-                path_geo, km, mins = api.get_road_path(coords_seq)
+                path_res = api.get_road_path(coords_seq)
+                
+                if len(path_res) == 4:
+                    path_geo, km, mins, is_fallback = path_res
+                else:
+                    path_geo, km, mins = path_res
+                    is_fallback = False
+
+                if is_fallback:
+                    any_fallback = True
                 
                 total_km += km
                 total_min += mins
-                all_routes_geo.append(path_geo if path_geo else coords_seq)
+                all_routes_geo.append({
+                    "geo": path_geo if path_geo else coords_seq,
+                    "is_fallback": is_fallback
+                })
                 
                 vehicle_metrics.append({
                     "id": v_idx + 1,
@@ -82,6 +93,9 @@ if go_btn:
                     })
                     all_coords.append(node['coords'])
             
+            if any_fallback:
+                st.warning("⚠️ Live road routing service unavailable. Displaying approximate geodesic route lines.")
+            
             # --- CALCULATE LOGISTICS METRICS ---
             total_fuel = total_km / mileage
             total_cost = total_fuel * fuel_price
@@ -99,7 +113,7 @@ if go_btn:
             st.session_state.optimized_route = {
                 "markers": all_markers,
                 "coords": all_coords,
-                "routes_geo": all_routes_geo # List of geometries
+                "routes_geo": all_routes_geo # List of geometries with fallback flags
             }
             
             # Store Quantum Analytics
@@ -107,7 +121,7 @@ if go_btn:
             
             st.session_state.solver_status = "Completed"
             status.update(label="Optimization Complete!", state="complete", expanded=False)
-            time.sleep(0.8)
+            time.sleep(0.5)
             st.rerun()
 
 # 4. Render Results Dashboard

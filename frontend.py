@@ -1,4 +1,5 @@
 # frontend.py
+import os
 import streamlit as st
 import pandas as pd
 import folium
@@ -233,7 +234,25 @@ def render_optimizer_view():
             with t3: show_split   = st.toggle("Split",   True, help="Color-code by vehicle")
 
         # ── Folium Map ────────────────────────────────────────────────
-        map_obj = folium.Map(location=d['coords'][0], zoom_start=11, tiles="Cartodb Dark_Matter")
+        # Confirmed key-less raster tile endpoint (no watermark)
+        map_tile_url = os.environ.get("MAP_TILE_URL")
+        if not map_tile_url:
+            try:
+                if hasattr(st, "secrets") and "MAP_TILE_URL" in st.secrets:
+                    map_tile_url = st.secrets["MAP_TILE_URL"]
+            except Exception:
+                pass
+
+        if not map_tile_url:
+            map_tile_url = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+
+        map_obj = folium.Map(
+            location=d['coords'][0],
+            zoom_start=11,
+            tiles=map_tile_url,
+            attr='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+            subdomains="abcd"
+        )
 
         # Fit bounds
         sw = [min(p[0] for p in d['coords']), min(p[1] for p in d['coords'])]
@@ -241,21 +260,34 @@ def render_optimizer_view():
         map_obj.fit_bounds([sw, ne])
 
         # AuthKit palette for routes:
-        # primary vehicle = void-violet; additional vehicles = blueprint-blue variants
         route_colors = [_VIOLET, _BLUEPRINT, "#8fb8f0", "#6a9ed8"]
 
         # Draw Routes
         if show_routes:
-            for idx, route_geo in enumerate(d['routes_geo']):
+            for idx, route_entry in enumerate(d['routes_geo']):
+                if isinstance(route_entry, dict):
+                    route_geo = route_entry.get("geo", [])
+                    is_fallback = route_entry.get("is_fallback", False)
+                else:
+                    route_geo = route_entry
+                    is_fallback = False
+
                 color = route_colors[idx % len(route_colors)] if show_split else _VIOLET
-                line = folium.PolyLine(
-                    route_geo, color=color, weight=4, opacity=0.85,
-                    tooltip=f"Vehicle {idx+1}"
-                ).add_to(map_obj)
-                plugins.PolyLineTextPath(
-                    line, "      ➤      ", repeat=True, offset=6,
-                    attributes={'fill': color, 'font-weight': 'bold', 'font-size': '18'}
-                ).add_to(map_obj)
+
+                if is_fallback:
+                    line = folium.PolyLine(
+                        route_geo, color=color, weight=3, opacity=0.65, dash_array="8, 8",
+                        tooltip=f"Vehicle {idx+1} (Approximate Route — Road Geometry Unavailable)"
+                    ).add_to(map_obj)
+                else:
+                    line = folium.PolyLine(
+                        route_geo, color=color, weight=4, opacity=0.85,
+                        tooltip=f"Vehicle {idx+1}"
+                    ).add_to(map_obj)
+                    plugins.PolyLineTextPath(
+                        line, "      ➤      ", repeat=True, offset=6,
+                        attributes={'fill': color, 'font-weight': 'bold', 'font-size': '18'}
+                    ).add_to(map_obj)
 
         # Draw Markers — frosted circular tiles
         if show_markers:
@@ -264,7 +296,6 @@ def render_optimizer_view():
                 color = route_colors[v_id % len(route_colors)] if show_split else _VIOLET
 
                 if mk['stop_idx'] == 0:
-                    # Start marker — ghost-white circle
                     icon = plugins.BeautifyIcon(
                         icon="play",
                         border_color=_FROST,
