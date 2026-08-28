@@ -110,7 +110,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
   };
 
   return (
-    <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-6">
+    <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-6 font-sans">
       
       {/* Search Header Bar (Section 4.1 Global Search) */}
       <div className="quantum-glow-card p-4 rounded-xl space-y-4">
@@ -135,7 +135,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
             <button
               onClick={() => handleRunOptimization()}
               disabled={loading}
-              className="flex-1 md:flex-initial btn-ember-gradient px-5 py-2.5 text-xs uppercase font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0 shadow-lg shadow-[#ff5719]/20"
+              className="flex-1 md:flex-initial btn-ember-gradient px-5 py-2.5 text-xs uppercase font-bold flex items-center justify-center gap-2 mt-4 md:mt-0 shadow-lg shadow-[#ff5719]/20 cursor-pointer"
             >
               {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-white" />}
               <span>{loading ? 'Optimizing...' : 'Run Quantum Router'}</span>
@@ -144,7 +144,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
             <button
               onClick={handleOpenReport}
               disabled={loading}
-              className="flex-1 md:flex-initial bg-[#1e1929] hover:bg-[#251f33] border border-[#ff5719]/60 hover:border-[#ff5719] text-[#e9def5] px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0 transition shadow-sm"
+              className="flex-1 md:flex-initial bg-[#1e1929] hover:bg-[#251f33] border border-[#ff5719]/60 hover:border-[#ff5719] text-[#f4f1e8] px-4 py-2.5 rounded-lg text-xs font-semibold uppercase flex items-center justify-center gap-2 mt-4 md:mt-0 transition shadow-sm cursor-pointer"
               title="Generate & View Fleet Optimization Report"
             >
               <FileText className="w-4 h-4 text-[#ff5719]" />
@@ -156,7 +156,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
         {/* Intermediate Waypoints (if any) */}
         {intermediateStops.length > 0 && (
           <div className="space-y-3 pt-3 border-t border-[#5c4037]/30">
-            <div className="text-xs font-mono text-[#ffb59e] uppercase">Intermediate Waypoints</div>
+            <div className="label-caps text-[#ffb59e]">Intermediate Waypoints</div>
             {intermediateStops.map((stop, idx) => (
               <div key={idx} className="flex items-center gap-3">
                 <div className="flex-1">
@@ -169,7 +169,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                 </div>
                 <button
                   onClick={() => handleRemoveStop(idx)}
-                  className="mt-5 p-2 rounded-lg bg-[#110b1b] border border-[#ff4444]/40 text-[#ff6666] hover:bg-[#ff4444]/10 transition"
+                  className="mt-5 p-2 rounded-lg bg-[#110b1b] border border-[#ff4444]/40 text-[#ff6666] hover:bg-[#ff4444]/10 transition cursor-pointer"
                   title="Remove Waypoint"
                 >
                   ✕
@@ -182,7 +182,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
         <div className="flex justify-start">
           <button
             onClick={handleAddStop}
-            className="text-xs font-mono text-[#9dcaff] hover:text-[#e9def5] flex items-center gap-1.5 transition"
+            className="text-xs font-mono text-[#9dcaff] hover:text-[#f4f1e8] flex items-center gap-1.5 transition cursor-pointer"
           >
             <span>+ Add Intermediate Waypoint</span>
           </button>
@@ -195,8 +195,8 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
         {/* Left Sidebar Pane (~320px) */}
         <div className="lg:col-span-3 space-y-6 bg-[#1e1929] border border-[#5c4037] p-5 rounded-2xl">
           <div>
-            <h3 className="text-base font-normal text-[#e9def5]">Active Simulations</h3>
-            <p className="text-xs text-[#e6beb2]/70 mt-1 leading-relaxed">
+            <h3 className="font-display-bold text-lg font-extrabold text-[#f4f1e8] uppercase">ACTIVE SIMULATIONS</h3>
+            <p className="text-xs text-[#e6beb2]/70 mt-1 leading-relaxed font-normal">
               Quantum routing algorithms actively processing high-density urban grids.
             </p>
           </div>
@@ -212,7 +212,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                     setSelectedPreset(preset.id);
                     handleRunOptimization(preset.id);
                   }}
-                  className={`w-full text-left p-3.5 rounded-xl border transition flex items-center justify-between ${
+                  className={`w-full text-left p-3.5 rounded-xl border transition flex items-center justify-between cursor-pointer ${
                     isSelected
                       ? 'bg-[#221d2d] border-[#ff5719] shadow-md shadow-[#ff5719]/10'
                       : 'bg-[#110b1b] border-[#5c4037]/50 hover:border-[#5c4037]'
@@ -220,9 +220,9 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                 >
                   <div className="flex items-center gap-2.5">
                     <Layers className={`w-4 h-4 ${isSelected ? 'text-[#ff5719]' : 'text-[#e6beb2]/50'}`} />
-                    <span className="text-xs font-mono font-medium text-[#e9def5]">{preset.label}</span>
+                    <span className="text-xs font-mono font-medium text-[#f4f1e8]">{preset.label}</span>
                   </div>
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                  <span className={`text-[10px] font-mono label-caps px-2 py-0.5 rounded ${
                     isSelected ? 'bg-[#ff5719]/20 text-[#ffb59e] border border-[#ff5719]/30' : 'bg-[#221d2d] text-[#e6beb2]/40'
                   }`}>
                     {isSelected ? 'ACTIVE' : preset.status}
@@ -235,8 +235,8 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
           {/* Fleet Controls */}
           <div className="space-y-3 pt-3 border-t border-[#5c4037]/30">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-mono text-[#ffb59e] uppercase">Fleet Size</label>
-              <span className="text-xs font-mono font-bold text-[#e9def5] bg-[#110b1b] px-2 py-0.5 rounded border border-[#5c4037]">
+              <label className="label-caps text-[#ffb59e]">Fleet Size</label>
+              <span className="text-xs font-mono font-bold text-[#f4f1e8] bg-[#110b1b] px-2 py-0.5 rounded border border-[#5c4037] stat-number">
                 {vehicleCount} Vehicle{vehicleCount > 1 ? 's' : ''}
               </span>
             </div>
@@ -252,11 +252,11 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
 
           {/* Global Controls */}
           <div className="space-y-3 pt-3 border-t border-[#5c4037]/30">
-            <span className="text-[10px] font-mono text-[#e6beb2]/60 uppercase tracking-wider">GLOBAL CONTROLS</span>
+            <span className="label-caps text-[#e6beb2]/60">GLOBAL CONTROLS</span>
             
             <button
               onClick={() => handleRunOptimization()}
-              className="w-full btn-ember-gradient py-2.5 px-3 text-xs uppercase font-semibold flex items-center justify-center gap-2"
+              className="w-full btn-ember-gradient py-2.5 px-3 text-xs uppercase font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>⇅ Re-route All Entities</span>
@@ -264,7 +264,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
 
             <button
               onClick={handleOpenReport}
-              className="w-full bg-[#110b1b] hover:bg-[#221d2d] border border-[#ff5719]/60 hover:border-[#ff5719] text-[#ffb59e] py-2.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition"
+              className="w-full bg-[#110b1b] hover:bg-[#221d2d] border border-[#ff5719]/60 hover:border-[#ff5719] text-[#ffb59e] py-2.5 px-3 rounded-lg text-xs font-mono font-semibold uppercase flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5 text-[#ff5719]" />
               <span>📄 Export Audit Report</span>
@@ -272,7 +272,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
 
             <button
               onClick={() => alert("Emergency Override Initiated: All vehicles holding position.")}
-              className="w-full bg-[#110b1b] border border-[#ff4444] text-[#ff6666] hover:bg-[#ff4444]/10 py-2.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition"
+              className="w-full bg-[#110b1b] border border-[#ff4444] text-[#ff6666] hover:bg-[#ff4444]/10 py-2.5 px-3 rounded-lg text-xs font-mono font-semibold uppercase flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <ShieldAlert className="w-3.5 h-3.5" />
               <span>⚠ Emergency Override</span>
@@ -286,13 +286,13 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
             
             {/* Top Floating Status Chips */}
             <div className="absolute top-7 left-7 z-10 flex flex-wrap items-center gap-2">
-              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md">
+              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md stat-number">
                 ● NODE: {optimizationResult?.run_id || 'RUN-4092'}
               </div>
-              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#9dcaff] backdrop-blur-md">
+              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#9dcaff] backdrop-blur-md stat-number">
                 LATENCY: {optimizationResult?.telemetry?.execution_ms || 12}ms
               </div>
-              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md flex items-center gap-1.5">
+              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md flex items-center gap-1.5 stat-number">
                 <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
                 <span>TIME TAKEN: {metrics.total_time_min || 118} min ({((metrics.total_time_min || 118) / 60).toFixed(1)} hrs)</span>
               </div>
@@ -317,39 +317,39 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
               
               {/* Card 1: Time Taken */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-[#ffb59e]">
+                <div className="flex items-center justify-between label-caps text-[#ffb59e]">
                   <span>Time Taken</span>
                   <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
                 </div>
-                <div className="text-2xl font-light text-[#e9def5]">
+                <div className="text-2xl font-extrabold text-[#f4f1e8] stat-number">
                   {metrics.total_time_min || 118} min ({((metrics.total_time_min || 118) / 60).toFixed(1)} hrs)
                 </div>
                 <div className="w-full bg-[#221d2d] h-1.5 rounded-full overflow-hidden">
                   <div className="bg-[#ff5719] h-full w-[80%]"></div>
                 </div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/60">{metrics.total_distance_km || 142.8} km estimated route</div>
+                <div className="text-[10px] font-mono text-[#e6beb2]/60 stat-number">{metrics.total_distance_km || 142.8} km estimated route</div>
               </div>
 
               {/* Card 2: Time Saved */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-[#ffb59e]">
+                <div className="flex items-center justify-between label-caps text-[#ffb59e]">
                   <span>Time Saved</span>
-                  <Clock className="w-3.5 h-3.5" />
+                  <Clock className="w-3.5 h-3.5 text-[#9dcaff]" />
                 </div>
-                <div className="text-2xl font-light text-[#e9def5]">{metrics.time_saved_hrs || 2.4} hrs</div>
+                <div className="text-2xl font-extrabold text-[#f4f1e8] stat-number">{metrics.time_saved_hrs || 2.4} hrs</div>
                 <div className="w-full bg-[#221d2d] h-1.5 rounded-full overflow-hidden">
                   <div className="bg-[#ff5719] h-full w-[75%]"></div>
                 </div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/60">+14% vs avg</div>
+                <div className="text-[10px] font-mono text-[#e6beb2]/60 stat-number">+14% vs avg</div>
               </div>
 
               {/* Card 3: CO2 Reduction */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-[#9dcaff]">
+                <div className="flex items-center justify-between label-caps text-[#9dcaff]">
                   <span>CO2 Reduction</span>
                   <Layers className="w-3.5 h-3.5" />
                 </div>
-                <div className="text-2xl font-light text-[#e9def5]">{metrics.co2_reduction_kg || 18.5} kg</div>
+                <div className="text-2xl font-extrabold text-[#f4f1e8] stat-number">{metrics.co2_reduction_kg || 18.5} kg</div>
                 <div className="w-full bg-[#221d2d] h-1.5 rounded-full overflow-hidden">
                   <div className="bg-[#9dcaff] h-full w-[85%]"></div>
                 </div>
@@ -358,16 +358,16 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
 
               {/* Card 4: Active Vehicles */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono text-[#d0bcff]">
+                <div className="flex items-center justify-between label-caps text-[#d0bcff]">
                   <span>Active Vehicles</span>
                   <Truck className="w-3.5 h-3.5" />
                 </div>
-                <div className="text-2xl font-light text-[#e9def5]">{vehicleCount} units</div>
+                <div className="text-2xl font-extrabold text-[#f4f1e8] stat-number">{vehicleCount} units</div>
                 <div className="text-[10px] font-mono text-[#d0bcff] flex items-center justify-between">
                   <span>Mixed Fleet Active</span>
                   <button
                     onClick={handleOpenReport}
-                    className="text-[#ffb59e] hover:underline flex items-center gap-0.5"
+                    className="text-[#ffb59e] hover:underline flex items-center gap-0.5 cursor-pointer"
                   >
                     View Report &rarr;
                   </button>

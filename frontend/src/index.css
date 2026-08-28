@@ -1,42 +1,101 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700,800&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-display: 'Clash Display', 'Inter', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
 
 @layer base {
   :root {
+    --font-display: 'Clash Display', 'Inter', sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
     --color-surface: #161120;
-    --color-surface-dim: #161120;
+    --color-surface-dim: #111111;
     --color-surface-bright: #3c3647;
-    --color-surface-container-lowest: #110b1b;
-    --color-surface-container-low: #1e1929;
-    --color-surface-container: #221d2d;
+    --color-surface-container-lowest: #0c0a10;
+    --color-surface-container-low: #161220;
+    --color-surface-container: #1e1929;
     --color-surface-container-high: #2d2738;
     --color-surface-container-highest: #383243;
-    --color-on-surface: #e9def5;
+    --color-on-surface: #f4f1e8;
     --color-on-surface-variant: #e6beb2;
     --color-outline: #ac897e;
     --color-outline-variant: #5c4037;
-    --color-primary: #ffb59e;
-    --color-on-primary: #5e1700;
+    --color-primary: #ff5719;
+    --color-on-primary: #ffffff;
     --color-primary-container: #ff5719;
-    --color-on-primary-container: #521300;
+    --color-on-primary-container: #ffffff;
     --color-secondary: #d0bcff;
     --color-secondary-container: #6000e3;
     --color-tertiary: #9dcaff;
     --color-tertiary-container: #3c95e4;
-    --color-background: #161120;
+    --color-background: #111111;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-on-surface);
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--font-sans);
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   code, pre, .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
   }
+}
+
+/* 1. Heavy Bold Grotesque Display Class (Clash Display, 800 weight, tight stacked leading) */
+.font-display-bold, .font-display {
+  font-family: 'Clash Display', 'Inter', sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.02em !important;
+  color: #f4f1e8;
+}
+
+/* 2. Grotesque Sans Class - Functional UI & Body (Inter) */
+.font-sans {
+  font-family: var(--font-sans) !important;
+}
+
+/* 3. Accent Badge / Rotated Pill (CSCO Style) */
+.accent-badge-pill {
+  background-color: #ff5719 !important;
+  color: #111111 !important;
+  font-family: 'Clash Display', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 4px 12px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transform: rotate(-2.5deg) !important;
+  box-shadow: 0 4px 14px rgba(255, 87, 25, 0.4) !important;
+}
+
+/* 4. Tabular Numerals for Stats, Counters & Stacked Metrics */
+.stat-number, .metric-value, [data-tabular], .tabular-nums {
+  font-variant-numeric: tabular-nums !important;
+  font-feature-settings: "tnum" 1 !important;
+}
+
+/* 5. Small Caps Section Labels */
+.label-caps {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 11px;
+  opacity: 0.65;
 }
 
 /* Custom Quantum Midnight Utilities */
@@ -53,9 +112,9 @@
 
 /* Ember Gradient Button */
 .btn-ember-gradient {
-  background: linear-gradient(135deg, var(--color-primary-container) 0%, var(--color-primary) 100%);
+  background: linear-gradient(135deg, #ff5719 0%, #ff8c00 100%);
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 8px;
   box-shadow: 0 4px 14px rgba(255, 87, 25, 0.35);
   transition: all 0.2s ease-in-out;
@@ -68,9 +127,9 @@
 
 /* Quantum Glow Card */
 .quantum-glow-card {
-  background-color: var(--color-surface-container);
+  background-color: #1e1929;
   border: 1px solid var(--color-outline-variant);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(17, 11, 27, 0.6);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(11, 11, 11, 0.8);
   position: relative;
 }
 
@@ -87,12 +146,12 @@
 
 /* Leaflet dark map fixes */
 .leaflet-container {
-  background-color: #110b1b !important;
+  background-color: #111111 !important;
   font-family: inherit;
 }
 .leaflet-popup-content-wrapper {
   background: #1e1929 !important;
-  color: #e9def5 !important;
+  color: #f4f1e8 !important;
   border: 1px solid #5c4037 !important;
   border-radius: 8px !important;
 }
@@ -100,8 +159,7 @@
   background: #1e1929 !important;
 }
 
-/* Map Dark Theme Tile Filter (High-contrast, sleek cyberpunk dark mode) */
+/* Map Dark Theme Tile Filter */
 .map-tiles-dark {
   filter: brightness(0.65) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.75);
 }
-

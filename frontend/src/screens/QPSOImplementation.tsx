@@ -46,7 +46,7 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
   const qpsoTimeHrs = (qpsoTimeMin / 60).toFixed(1);
   const avgTimeMin = qpsoTimeMin + timeSavedMin;
   const avgTimeHrs = (avgTimeMin / 60).toFixed(1);
-  const avgDist = (totalDist * 0.95).toFixed(1); // Direct shortest geodesic geometry (shorter distance, trapped in congestion)
+  const avgDist = (totalDist * 0.95).toFixed(1);
   const distDelta = (totalDist - parseFloat(avgDist)).toFixed(1);
   const fuelSavedL = (optimizationResult?.metrics?.co2_reduction_kg ? Number(optimizationResult.metrics.co2_reduction_kg) * 0.42 : 18.5 * 0.42).toFixed(1);
 
@@ -65,22 +65,25 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
   const currentFitness = (740.5 - (simIteration * 1.82)).toFixed(1);
 
   return (
-    <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-10 text-[#e9def5]">
+    <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-10 text-[#f4f1e8] font-sans">
       
       {/* 1. Header Banner */}
-      <div className="bg-gradient-to-r from-[#1e1929] via-[#161120] to-[#110b1b] border border-[#5c4037]/60 rounded-2xl p-6 sm:p-8 space-y-4 shadow-2xl relative overflow-hidden">
+      <div className="bg-[#1e1929] border border-[#5c4037]/60 rounded-2xl p-6 sm:p-8 space-y-4 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff5719]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5719]/15 border border-[#ff5719]/40 text-xs font-mono text-[#ffb59e]">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5719]/15 border border-[#ff5719]/40 label-caps text-[#ffb59e]">
           <Cpu className="w-4 h-4 text-[#ff5719]" />
           <span>QPSO MATHEMATICAL ALGORITHM IMPLEMENTATION</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#e9def5]">
-          QPSO Implementation & <span className="bg-gradient-to-r from-[#ff5719] via-[#ffb59e] to-[#9dcaff] bg-clip-text text-transparent">Mathematical Calculations</span>
-        </h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="font-display-bold text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#f4f1e8] uppercase leading-[0.92]">
+            QPSO IMPLEMENTATION & <span className="text-[#ff5719]">MATHEMATICAL CALCULATIONS</span>
+          </h1>
+          <span className="accent-badge-pill">QPSO V2 ENGINE</span>
+        </div>
 
-        <p className="text-sm sm:text-base text-[#e6beb2]/80 max-w-3xl leading-relaxed">
+        <p className="text-sm sm:text-base text-[#e6beb2]/80 max-w-3xl leading-relaxed font-normal">
           Detailed mathematical formulation and exact path trade-off calculations calculated dynamically for your chosen <strong className="text-[#ffb59e]">From ({fromName})</strong> and <strong className="text-[#ffb59e]">To ({destinationStopsText})</strong> locations.
         </p>
       </div>
@@ -89,14 +92,14 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
       <div className="space-y-6">
         <div className="border-b border-[#5c4037]/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#ffb59e] uppercase">
+            <div className="flex items-center gap-2 label-caps text-[#ffb59e]">
               <Compass className="w-4 h-4 text-[#ff5719]" />
               <span>Active Route Calculation & Alternative Selection</span>
             </div>
-            <h2 className="text-2xl font-bold text-[#e9def5] mt-1">Calculations for Chosen Locations</h2>
+            <h2 className="font-display-bold text-2xl font-extrabold text-[#f4f1e8] uppercase mt-1">Calculations for Chosen Locations</h2>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-[#ffb59e] bg-[#110b1b] border border-[#ff5719]/40 px-3 py-1.5 rounded-lg">
+          <div className="flex items-center gap-2 font-mono text-xs text-[#ffb59e] bg-[#110b1b] border border-[#ff5719]/40 px-3 py-1.5 rounded-lg stat-number">
             <Zap className="w-3.5 h-3.5 text-[#ff5719]" />
             <span>LIVE ACTIVE SIMULATION DATA</span>
           </div>
@@ -104,13 +107,13 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
 
         {/* Selected From -> To Location Card */}
         <div className="bg-[#110b1b] border border-[#ff5719]/50 rounded-2xl p-5 shadow-lg space-y-3">
-          <div className="text-xs font-mono text-[#ffb59e] uppercase font-bold tracking-wider">
+          <div className="label-caps text-[#ffb59e] font-semibold">
             Selected Origin & Destination Locations:
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-[#1e1929] p-4 rounded-xl border border-[#5c4037]/50 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-mono text-[#e6beb2]/60">
+              <div className="flex items-center gap-2 label-caps text-[#e6beb2]/60">
                 <MapPin className="w-4 h-4 text-[#ff5719]" />
                 <span>FROM (ORIGIN DEPOT):</span>
               </div>
@@ -118,7 +121,7 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
             </div>
 
             <div className="bg-[#1e1929] p-4 rounded-xl border border-[#5c4037]/50 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-mono text-[#e6beb2]/60">
+              <div className="flex items-center gap-2 label-caps text-[#e6beb2]/60">
                 <ArrowRight className="w-4 h-4 text-[#9dcaff]" />
                 <span>TO (DESTINATION STOPS):</span>
               </div>
@@ -136,25 +139,25 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
               <div className="flex items-center gap-2">
                 <XCircle className="w-5 h-5 text-[#ff4444]" />
                 <div>
-                  <h3 className="font-bold text-base text-[#e9def5]">Average / Dijkstra Alternative</h3>
+                  <h3 className="font-bold text-base text-[#f4f1e8]">Average / Dijkstra Alternative</h3>
                   <p className="text-xs text-[#e6beb2]/60 font-mono">Standard Shortest Geodesic Path (Traffic Bottlenecked)</p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded bg-[#ff4444]/20 text-[#ff7777] text-xs font-mono font-bold border border-[#ff4444]/40">
+              <span className="px-2.5 py-1 rounded bg-[#ff4444]/20 text-[#ff7777] text-xs label-caps font-bold border border-[#ff4444]/40">
                 REJECTED BY QPSO
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs font-mono">
               <div className="bg-[#110b1b] p-3 rounded-xl border border-[#5c4037]/30 space-y-1">
-                <span className="text-[#e6beb2]/60 text-[10px] uppercase">Path Distance</span>
-                <div className="text-lg font-bold text-[#e9def5]">{avgDist} km</div>
+                <span className="label-caps text-[#e6beb2]/60">Path Distance</span>
+                <div className="text-xl font-bold text-[#f4f1e8] stat-number">{avgDist} km</div>
                 <span className="text-[10px] text-[#ff7777]">Direct shortest geometry</span>
               </div>
 
               <div className="bg-[#110b1b] p-3 rounded-xl border border-[#5c4037]/30 space-y-1">
-                <span className="text-[#e6beb2]/60 text-[10px] uppercase">Transit Duration</span>
-                <div className="text-lg font-bold text-[#ff7777]">
+                <span className="label-caps text-[#e6beb2]/60">Transit Duration</span>
+                <div className="text-xl font-bold text-[#ff7777] stat-number">
                   {avgTimeMin.toFixed(1)} min ({avgTimeHrs} hrs)
                 </div>
                 <span className="text-[10px] text-[#ff7777]">Trapped in traffic delays</span>
@@ -164,15 +167,15 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
             <div className="bg-[#110b1b] p-3 rounded-xl border border-[#ff4444]/20 text-xs font-mono space-y-1">
               <div className="flex justify-between text-[#e6beb2]/80">
                 <span>Traffic Bottleneck Delay:</span>
-                <span className="text-[#ff7777] font-bold">+{timeSavedMin.toFixed(1)} min congestion</span>
+                <span className="text-[#ff7777] font-bold stat-number">+{timeSavedMin.toFixed(1)} min congestion</span>
               </div>
               <div className="flex justify-between text-[#e6beb2]/80">
                 <span>Quantum Energy State:</span>
-                <span className="text-[#ff7777]">E_k = 0.8940 (Local Minimum Trap)</span>
+                <span className="text-[#ff7777] stat-number">E_k = 0.8940 (Local Minimum Trap)</span>
               </div>
             </div>
 
-            <p className="text-xs text-[#e6beb2]/70 leading-relaxed italic">
+            <p className="text-xs text-[#e6beb2]/70 leading-relaxed italic font-normal">
               ❌ Classical greedy shortest-path algorithms pick this route because it is geometrically shorter by distance, but fail to account for real-time congestion accumulation on primary arterial roads, resulting in severe transit delays.
             </p>
           </div>
@@ -183,39 +186,39 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-[#ff5719]" />
                 <div>
-                  <h3 className="font-bold text-base text-[#e9def5]">QPSO Chosen Route</h3>
+                  <h3 className="font-bold text-base text-[#f4f1e8]">QPSO Chosen Route</h3>
                   <p className="text-xs text-[#ffb59e] font-mono">Delta-Potential Tunneled Global Optimal Path</p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded bg-[#ff5719] text-white text-xs font-mono font-bold shadow-md shadow-[#ff5719]/30">
+              <span className="accent-badge-pill">
                 CHOSEN BY QPSO
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-xs font-mono">
               <div className="bg-[#110b1b] p-3 rounded-xl border border-[#5c4037] space-y-1">
-                <span className="text-[#e6beb2]/60 text-[10px] uppercase">Path Distance</span>
-                <div className="text-lg font-bold text-[#e9def5]">{totalDist.toFixed(1)} km</div>
-                <span className="text-[10px] text-[#9dcaff]">+{distDelta} km deliberate reroute</span>
+                <span className="label-caps text-[#e6beb2]/60">Path Distance</span>
+                <div className="text-xl font-bold text-[#f4f1e8] stat-number">{totalDist.toFixed(1)} km</div>
+                <span className="text-[10px] text-[#9dcaff] stat-number">+{distDelta} km deliberate reroute</span>
               </div>
 
               <div className="bg-[#110b1b] p-3 rounded-xl border border-[#ff5719]/40 space-y-1">
-                <span className="text-[#e6beb2]/60 text-[10px] uppercase">Transit Duration</span>
-                <div className="text-lg font-bold text-[#ffb59e]">
+                <span className="label-caps text-[#e6beb2]/60">Transit Duration</span>
+                <div className="text-xl font-bold text-[#ffb59e] stat-number">
                   {qpsoTimeMin.toFixed(1)} min ({qpsoTimeHrs} hrs)
                 </div>
-                <span className="text-[10px] text-[#44ff88]">Saved {timeSavedMin.toFixed(1)} min ({timeSavedHrs.toFixed(1)} hrs)</span>
+                <span className="text-[10px] text-[#44ff88] stat-number">Saved {timeSavedMin.toFixed(1)} min ({timeSavedHrs.toFixed(1)} hrs)</span>
               </div>
             </div>
 
             <div className="bg-[#110b1b] p-3 rounded-xl border border-[#ff5719]/30 text-xs font-mono space-y-1">
               <div className="flex justify-between text-[#e6beb2]/80">
                 <span>Fuel Saved:</span>
-                <span className="text-[#44ff88] font-bold">{fuelSavedL} Liters</span>
+                <span className="text-[#44ff88] font-bold stat-number">{fuelSavedL} Liters</span>
               </div>
               <div className="flex justify-between text-[#e6beb2]/80">
                 <span>Quantum Energy State:</span>
-                <span className="text-[#ffb59e]">E_k = 0.0142 (Global Minimum)</span>
+                <span className="text-[#ffb59e] stat-number">E_k = 0.0142 (Global Minimum)</span>
               </div>
             </div>
 
@@ -231,43 +234,43 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
       {/* 3. Section 2: Mathematical Formulation of QPSO */}
       <div className="space-y-6">
         <div className="border-b border-[#5c4037]/30 pb-4">
-          <div className="flex items-center gap-2 text-xs font-mono text-[#ffb59e] uppercase">
+          <div className="flex items-center gap-2 label-caps text-[#ffb59e]">
             <Calculator className="w-4 h-4 text-[#ff5719]" />
             <span>Mathematical Physics & Delta-Potential Mechanics</span>
           </div>
-          <h2 className="text-2xl font-bold text-[#e9def5] mt-1">Core QPSO Algorithm Equations</h2>
+          <h2 className="font-display-bold text-2xl font-extrabold text-[#f4f1e8] uppercase mt-1">Core QPSO Algorithm Equations</h2>
         </div>
 
         {/* Tab Buttons for Equations */}
         <div className="flex flex-wrap gap-2 bg-[#110b1b] p-1.5 rounded-xl border border-[#5c4037]/50">
           <button
             onClick={() => setActiveMathTab('wave-func')}
-            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold transition cursor-pointer ${
-              activeMathTab === 'wave-func' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#e9def5]'
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold uppercase transition cursor-pointer ${
+              activeMathTab === 'wave-func' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#f4f1e8]'
             }`}
           >
             1. Quantum Wavefunction Update
           </button>
           <button
             onClick={() => setActiveMathTab('mbest')}
-            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold transition cursor-pointer ${
-              activeMathTab === 'mbest' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#e9def5]'
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold uppercase transition cursor-pointer ${
+              activeMathTab === 'mbest' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#f4f1e8]'
             }`}
           >
             2. Mean Best Vector (mbest)
           </button>
           <button
             onClick={() => setActiveMathTab('attractor')}
-            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold transition cursor-pointer ${
-              activeMathTab === 'attractor' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#e9def5]'
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold uppercase transition cursor-pointer ${
+              activeMathTab === 'attractor' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#f4f1e8]'
             }`}
           >
             3. Local Attractor (p_i)
           </button>
           <button
             onClick={() => setActiveMathTab('spv')}
-            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold transition cursor-pointer ${
-              activeMathTab === 'spv' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#e9def5]'
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold uppercase transition cursor-pointer ${
+              activeMathTab === 'spv' ? 'bg-[#ff5719] text-white shadow-md' : 'text-[#e6beb2]/70 hover:text-[#f4f1e8]'
             }`}
           >
             4. SPV Permutation Mapping
@@ -280,11 +283,11 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           {activeMathTab === 'wave-func' && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[#ffb59e] font-mono">1. Quantum Delta-Potential Position Update Equation</h3>
-              <p className="text-xs text-[#e6beb2]/80 leading-relaxed">
+              <p className="text-xs text-[#e6beb2]/80 leading-relaxed font-normal">
                 In QPSO, a particle does not have a deterministic trajectory or velocity vector. Instead, the probability density function of finding particle i at position x is bound by a 1D Delta-Potential Well centered at local attractor p_i. Sampling from the wave collapse equation yields:
               </p>
               
-              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl text-center font-mono text-base sm:text-lg text-[#ffb59e] shadow-inner overflow-x-auto">
+              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl text-center font-mono text-base sm:text-lg text-[#ffb59e] shadow-inner overflow-x-auto stat-number">
                 x_i(t+1) = p_i(t) ± α · | mbest(t) - x_i(t) | · ln(1 / u),  where u ~ U(0, 1)
               </div>
 
@@ -308,11 +311,11 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           {activeMathTab === 'mbest' && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[#ffb59e] font-mono">2. Mean Best Position (mbest) Center of Mass</h3>
-              <p className="text-xs text-[#e6beb2]/80 leading-relaxed">
+              <p className="text-xs text-[#e6beb2]/80 leading-relaxed font-normal">
                 The Mean Best (mbest) is the center of gravity of the personal best positions (pbest_i) of all N particles in the swarm. It acts as the quantum mutual interaction field that prevents premature convergence.
               </p>
 
-              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl text-center font-mono text-base sm:text-lg text-[#ffb59e] shadow-inner overflow-x-auto">
+              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl text-center font-mono text-base sm:text-lg text-[#ffb59e] shadow-inner overflow-x-auto stat-number">
                 mbest(t) = (1 / N) * Σ pbest_i(t) = [ (1/N)*Σ pbest_i,1,  (1/N)*Σ pbest_i,2,  ... ]
               </div>
 
@@ -325,11 +328,11 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           {activeMathTab === 'attractor' && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[#ffb59e] font-mono">3. Stochastic Local Attractor (p_i) Formulation</h3>
-              <p className="text-xs text-[#e6beb2]/80 leading-relaxed">
+              <p className="text-xs text-[#e6beb2]/80 leading-relaxed font-normal">
                 Each particle is pulled toward a dynamic local attractor p_i located at a stochastic point between its personal best position (pbest_i) and the global best position (gbest):
               </p>
 
-              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl text-center font-mono text-base sm:text-lg text-[#ffb59e] shadow-inner overflow-x-auto">
+              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl text-center font-mono text-base sm:text-lg text-[#ffb59e] shadow-inner overflow-x-auto stat-number">
                 p_i(t) = φ · pbest_i(t) + (1 - φ) · gbest(t),  where φ ~ U(0, 1)
               </div>
 
@@ -342,11 +345,11 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           {activeMathTab === 'spv' && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-[#ffb59e] font-mono">4. Smallest Position Value (SPV) Permutation Rule</h3>
-              <p className="text-xs text-[#e6beb2]/80 leading-relaxed">
+              <p className="text-xs text-[#e6beb2]/80 leading-relaxed font-normal">
                 QPSO operates in continuous space R^d, but Vehicle Routing Problems (VRP) require discrete customer stop permutations. SPV maps continuous coordinates to discrete stop sequences via sorting:
               </p>
 
-              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl font-mono text-xs sm:text-sm text-[#ffb59e] space-y-2">
+              <div className="bg-[#110b1b] border border-[#ff5719]/40 p-6 rounded-xl font-mono text-xs sm:text-sm text-[#ffb59e] space-y-2 stat-number">
                 <div>Continuous Particle Position Vector:  x_i = [ 2.41, -0.85,  1.12,  0.34 ]</div>
                 <div className="text-[#9dcaff]">Sorted Index Ranking (Argsort):      π_i = [ Stop 2, Stop 4, Stop 3, Stop 1 ]</div>
               </div>
@@ -364,11 +367,11 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
       <div className="space-y-6">
         <div className="border-b border-[#5c4037]/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#ffb59e] uppercase">
+            <div className="flex items-center gap-2 label-caps text-[#ffb59e]">
               <Sparkles className="w-4 h-4 text-[#ff5719]" />
               <span>Step-by-Step Numerical Execution Engine</span>
             </div>
-            <h2 className="text-2xl font-bold text-[#e9def5] mt-1">Live QPSO Mathematical Execution Simulator</h2>
+            <h2 className="font-display-bold text-2xl font-extrabold text-[#f4f1e8] uppercase mt-1">Live QPSO Mathematical Execution Simulator</h2>
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
@@ -388,7 +391,7 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs font-mono">
               <span className="text-[#ffb59e] font-semibold">Iteration Progress (t):</span>
-              <span className="text-white font-bold bg-[#ff5719] px-2 py-0.5 rounded">
+              <span className="text-white font-bold bg-[#ff5719] px-2 py-0.5 rounded stat-number">
                 t = {simIteration} / {maxIter} cycles
               </span>
             </div>
@@ -406,26 +409,26 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
             
             <div className="bg-[#110b1b] p-4 rounded-xl border border-[#5c4037]/40 space-y-1">
-              <span className="text-[#e6beb2]/60 text-[10px] uppercase">Alpha Coefficient (α)</span>
-              <div className="text-xl font-bold text-[#9dcaff]">{alpha}</div>
+              <span className="label-caps text-[#e6beb2]/60">Alpha Coefficient (α)</span>
+              <div className="text-xl font-bold text-[#9dcaff] stat-number">{alpha}</div>
               <span className="text-[10px] text-[#e6beb2]/50">Contraction rate</span>
             </div>
 
             <div className="bg-[#110b1b] p-4 rounded-xl border border-[#5c4037]/40 space-y-1">
-              <span className="text-[#e6beb2]/60 text-[10px] uppercase">Mean Best (mbest)</span>
-              <div className="text-xl font-bold text-[#ffb59e]">{mbestVal}</div>
+              <span className="label-caps text-[#e6beb2]/60">Mean Best (mbest)</span>
+              <div className="text-xl font-bold text-[#ffb59e] stat-number">{mbestVal}</div>
               <span className="text-[10px] text-[#e6beb2]/50">Swarm center of mass</span>
             </div>
 
             <div className="bg-[#110b1b] p-4 rounded-xl border border-[#5c4037]/40 space-y-1">
-              <span className="text-[#e6beb2]/60 text-[10px] uppercase">Quantum Jump (Δx)</span>
-              <div className="text-xl font-bold text-[#d0bcff]">{deltaQuantum}</div>
+              <span className="label-caps text-[#e6beb2]/60">Quantum Jump (Δx)</span>
+              <div className="text-xl font-bold text-[#d0bcff] stat-number">{deltaQuantum}</div>
               <span className="text-[10px] text-[#e6beb2]/50">Wavefunction radius</span>
             </div>
 
             <div className="bg-[#110b1b] p-4 rounded-xl border border-[#ff5719]/40 space-y-1">
-              <span className="text-[#e6beb2]/60 text-[10px] uppercase">Current Fitness Score f(π)</span>
-              <div className="text-xl font-bold text-[#ff5719]">{currentFitness}</div>
+              <span className="label-caps text-[#e6beb2]/60">Current Fitness Score f(π)</span>
+              <div className="text-xl font-bold text-[#ff5719] stat-number">{currentFitness}</div>
               <span className="text-[10px] text-[#44ff88]">Lower is better</span>
             </div>
 
@@ -438,7 +441,7 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
               <span className="text-[10px] text-[#44ff88]">STATUS: CONVERGING</span>
             </div>
 
-            <div className="text-[#e6beb2]/80 space-y-1 text-[11px] leading-relaxed">
+            <div className="text-[#e6beb2]/80 space-y-1 text-[11px] leading-relaxed stat-number">
               <div>[Step 1] Evaluated traffic matrix for Origin [{fromName}]: Distance = {totalDist.toFixed(1)} km</div>
               <div>[Step 2] Computed Mean Best vector mbest = [{mbestVal}, {(parseFloat(mbestVal)*0.95).toFixed(4)}, {(parseFloat(mbestVal)*1.08).toFixed(4)}]</div>
               <div>[Step 3] Calculated stochastic local attractor p_i = [{pbestVal}, {gbestVal}]</div>
