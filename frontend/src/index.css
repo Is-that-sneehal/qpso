@@ -50,37 +50,20 @@
   }
 }
 
-/* 1. Heavy Bold Grotesque Display Class (Clash Display, 800 weight, tight stacked leading) */
+/* 1. Heavy Bold Grotesque Display Class (Clash Display, 800 weight, spacious clean tracking) */
 .font-display-bold, .font-display {
   font-family: 'Clash Display', 'Inter', sans-serif !important;
   font-weight: 800 !important;
   text-transform: uppercase !important;
-  line-height: 0.92 !important;
-  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0.02em !important;
+  word-spacing: 0.12em !important;
   color: #f4f1e8;
 }
 
 /* 2. Grotesque Sans Class - Functional UI & Body (Inter) */
 .font-sans {
   font-family: var(--font-sans) !important;
-}
-
-/* 3. Accent Badge / Rotated Pill (CSCO Style) */
-.accent-badge-pill {
-  background-color: #ff5719 !important;
-  color: #111111 !important;
-  font-family: 'Clash Display', sans-serif !important;
-  font-weight: 800 !important;
-  font-size: 11px !important;
-  letter-spacing: 0.04em !important;
-  text-transform: uppercase !important;
-  padding: 4px 12px !important;
-  border-radius: 999px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  transform: rotate(-2.5deg) !important;
-  box-shadow: 0 4px 14px rgba(255, 87, 25, 0.4) !important;
 }
 
 /* 4. Tabular Numerals for Stats, Counters & Stacked Metrics */

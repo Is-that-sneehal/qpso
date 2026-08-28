@@ -76,12 +76,9 @@ export const QPSOImplementation: React.FC<QPSOImplementationProps> = ({
           <span>QPSO MATHEMATICAL ALGORITHM IMPLEMENTATION</span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-display-bold text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#f4f1e8] uppercase leading-[0.92]">
-            QPSO IMPLEMENTATION & <span className="text-[#ff5719]">MATHEMATICAL CALCULATIONS</span>
-          </h1>
-          <span className="accent-badge-pill">QPSO V2 ENGINE</span>
-        </div>
+        <h1 className="font-display-bold text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#f4f1e8] uppercase leading-snug tracking-wide">
+          QPSO IMPLEMENTATION & <span className="text-[#ff5719]">MATHEMATICAL CALCULATIONS</span>
+        </h1>
 
         <p className="text-sm sm:text-base text-[#e6beb2]/80 max-w-3xl leading-relaxed font-normal">
           Detailed mathematical formulation and exact path trade-off calculations calculated dynamically for your chosen <strong className="text-[#ffb59e]">From ({fromName})</strong> and <strong className="text-[#ffb59e]">To ({destinationStopsText})</strong> locations.
