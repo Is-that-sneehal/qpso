@@ -1,74 +1,62 @@
 import React from 'react';
-import { Share2, Activity } from 'lucide-react';
+import { Users, FileText, Sparkles } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onSelectTab?: (tab: string) => void;
+  onOpenReport?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenReport }) => {
   return (
-    <footer className="bg-[#110b1b] border-t border-[#5c4037]/30 text-[#e6beb2] pt-12 pb-8 px-6 mt-16">
-      <div className="max-w-[1440px] mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 pb-10 border-b border-[#5c4037]/20 text-xs">
+    <footer className="bg-[#110b1b] border-t border-[#5c4037]/30 text-[#e6beb2] pt-10 pb-8 px-6 mt-16">
+      <div className="max-w-[1440px] mx-auto space-y-8">
+        
+        {/* Simple 2-column layout: Our Team & Documentation */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-[#5c4037]/20 text-xs">
           
-          {/* Column 1: Platform */}
-          <div>
-            <h4 className="font-semibold text-[#e9def5] mb-3 uppercase tracking-wider text-[11px] font-mono text-[#ffb59e]">Platform</h4>
-            <ul className="space-y-2">
-              <li><a href="#features" className="hover:text-[#e9def5] transition">Features</a></li>
-              <li><a href="#api" className="hover:text-[#e9def5] transition">API Reference</a></li>
-              <li><a href="#network" className="hover:text-[#e9def5] transition">Network Map</a></li>
-            </ul>
+          {/* Column 1: Our Team */}
+          <div className="bg-[#1e1929]/60 border border-[#5c4037]/40 rounded-xl p-5 space-y-3">
+            <div className="flex items-center gap-2 font-semibold text-[#ffb59e] uppercase tracking-wider text-xs font-mono">
+              <Users className="w-4 h-4 text-[#ff5719]" />
+              <span>Our Team</span>
+            </div>
+            <p className="text-xs text-[#e6beb2]/80 leading-relaxed font-mono">
+              Designed & Developed by the Quantum Route Optimization Engineering Team. Specializing in Delta-Potential Particle Swarm Optimization, Real-Time Telemetry & Traffic Graph Routing.
+            </p>
           </div>
 
-          {/* Column 2: Solutions */}
-          <div>
-            <h4 className="font-semibold text-[#e9def5] mb-3 uppercase tracking-wider text-[11px] font-mono text-[#ffb59e]">Solutions</h4>
-            <ul className="space-y-2">
-              <li><a href="#urban" className="hover:text-[#e9def5] transition">Urban Transit</a></li>
-              <li><a href="#logistics" className="hover:text-[#e9def5] transition">Logistics</a></li>
-              <li><a href="#ops" className="hover:text-[#e9def5] transition">Real-time Ops</a></li>
-            </ul>
-          </div>
-
-          {/* Column 3: Resources */}
-          <div>
-            <h4 className="font-semibold text-[#e9def5] mb-3 uppercase tracking-wider text-[11px] font-mono text-[#ffb59e]">Resources</h4>
-            <ul className="space-y-2">
-              <li><a href="#docs" className="hover:text-[#e9def5] transition">Documentation</a></li>
-              <li><a href="#cases" className="hover:text-[#e9def5] transition">Case Studies</a></li>
-              <li><a href="#papers" className="hover:text-[#e9def5] transition">Whitepapers</a></li>
-            </ul>
-          </div>
-
-          {/* Column 4: Company */}
-          <div>
-            <h4 className="font-semibold text-[#e9def5] mb-3 uppercase tracking-wider text-[11px] font-mono text-[#ffb59e]">Company</h4>
-            <ul className="space-y-2">
-              <li><a href="#about" className="hover:text-[#e9def5] transition">About</a></li>
-              <li><a href="#careers" className="hover:text-[#e9def5] transition">Careers</a></li>
-              <li><a href="#contact" className="hover:text-[#e9def5] transition">Contact</a></li>
-            </ul>
-          </div>
-
-          {/* Column 5: Legal */}
-          <div>
-            <h4 className="font-semibold text-[#e9def5] mb-3 uppercase tracking-wider text-[11px] font-mono text-[#ffb59e]">Legal</h4>
-            <ul className="space-y-2">
-              <li><a href="#privacy" className="hover:text-[#e9def5] transition">Privacy</a></li>
-              <li><a href="#terms" className="hover:text-[#e9def5] transition">Terms</a></li>
-              <li><a href="#security" className="hover:text-[#e9def5] transition">Security</a></li>
-            </ul>
+          {/* Column 2: Documentation */}
+          <div className="bg-[#1e1929]/60 border border-[#5c4037]/40 rounded-xl p-5 space-y-3">
+            <div className="flex items-center gap-2 font-semibold text-[#ffb59e] uppercase tracking-wider text-xs font-mono">
+              <FileText className="w-4 h-4 text-[#9dcaff]" />
+              <span>Documentation</span>
+            </div>
+            <div className="flex flex-wrap gap-4 text-xs font-mono pt-1">
+              <button
+                onClick={() => onSelectTab && onSelectTab('qpso-implementation')}
+                className="text-[#9dcaff] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#9dcaff]" />
+                <span>QPSO Implementation & Mathematical Formulations</span>
+              </button>
+              {onOpenReport && (
+                <button
+                  onClick={onOpenReport}
+                  className="text-[#ffb59e] hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <span>📄 Download Route Audit Report</span>
+                </button>
+              )}
+            </div>
           </div>
 
         </div>
 
-        {/* Copyright & Icon buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pt-6 text-xs text-[#e6beb2]/60 gap-4">
-          <p>© 2024 Quantum Route Optimization. Powered by Neural Traffic.</p>
-          <div className="flex items-center gap-3">
-            <button className="p-1.5 rounded-md hover:bg-[#221d2d] text-[#e6beb2] hover:text-[#e9def5] transition">
-              <Share2 className="w-4 h-4" />
-            </button>
-            <button className="p-1.5 rounded-md hover:bg-[#221d2d] text-[#e6beb2] hover:text-[#e9def5] transition">
-              <Activity className="w-4 h-4" />
-            </button>
+        {/* Copyright */}
+        <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-[#e6beb2]/60 font-mono gap-4">
+          <p>© 2026 Quantum Route Optimization Platform. All rights reserved.</p>
+          <div className="text-[11px] text-[#ffb59e]">
+            Powered by Quantum-Behaved Swarm Engine
           </div>
         </div>
 

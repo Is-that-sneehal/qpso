@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, User, Zap } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
 interface NavbarProps {
   currentTab: string;
@@ -14,7 +14,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'live-simulation', label: 'Live Simulation' },
     { id: 'optimization-engine', label: 'Optimization Engine' },
-    { id: 'network-health', label: 'Network Health' },
+    { id: 'qpso-implementation', label: 'QPSO Implementation' },
     { id: 'system-settings', label: 'System Settings' }
   ];
 
@@ -76,20 +76,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
             </button>
           )}
 
-          <a
-            href="https://github.com/pujit23/QRoute23"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-[#5c4037] text-[#e9def5] hover:bg-[#221d2d] transition"
-          >
-            <Star className="w-3.5 h-3.5 text-[#ffb59e]" />
-            <span>GitHub</span>
-          </a>
-
-          <button className="hidden sm:block text-xs font-medium text-[#e6beb2] hover:text-[#e9def5] px-2 py-1">
-            Sign In
-          </button>
-
           <button
             onClick={onStartOptimization}
             className="btn-ember-gradient px-4 py-2 text-xs uppercase tracking-wider flex items-center gap-1.5"
@@ -97,12 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
             <Zap className="w-3.5 h-3.5 fill-white" />
             <span>Start Optimization</span>
           </button>
-
-          <div className="w-8 h-8 rounded-full bg-[#ffb59e]/15 border border-[#ffb59e]/30 flex items-center justify-center text-[#ffb59e]">
-            <User className="w-4 h-4" />
-          </div>
         </div>
-
 
       </div>
     </header>

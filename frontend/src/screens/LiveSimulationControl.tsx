@@ -294,7 +294,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
               </div>
               <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
-                <span>TIME TAKEN: {metrics.total_time_min || 118} min</span>
+                <span>TIME TAKEN: {metrics.total_time_min || 118} min ({((metrics.total_time_min || 118) / 60).toFixed(1)} hrs)</span>
               </div>
               <button
                 onClick={handleOpenReport}
@@ -321,7 +321,9 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                   <span>Time Taken</span>
                   <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
                 </div>
-                <div className="text-2xl font-light text-[#e9def5]">{metrics.total_time_min || 118} min</div>
+                <div className="text-2xl font-light text-[#e9def5]">
+                  {metrics.total_time_min || 118} min ({((metrics.total_time_min || 118) / 60).toFixed(1)} hrs)
+                </div>
                 <div className="w-full bg-[#221d2d] h-1.5 rounded-full overflow-hidden">
                   <div className="bg-[#ff5719] h-full w-[80%]"></div>
                 </div>

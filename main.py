@@ -149,12 +149,24 @@ if page == "Route Optimizer":
                 help="Controls the recommendations section of the report.",
             )
             if st.button("📊 Generate Report"):
+                metrics_data = st.session_state.get("route_metrics") or {}
+                live_metrics = {
+                    "total_distance_km": round(metrics_data.get("dist", 0.0), 1),
+                    "total_time_min": round(metrics_data.get("time", 0.0), 1),
+                    "fuel_liters": round(metrics_data.get("fuel", 0.0), 1),
+                    "cost_inr": round(metrics_data.get("cost", 0.0), 0),
+                    "time_saved_hrs": round((((metrics_data.get("dist", 0.0) * 1.25) - metrics_data.get("dist", 0.0)) / 40.0), 1),
+                    "co2_reduction_kg": round(((metrics_data.get("dist", 0.0) * 1.25) - metrics_data.get("dist", 0.0)) * 0.12, 1),
+                    "vehicles": metrics_data.get("vehicles", [])
+                } if metrics_data else None
+
                 report_data = generate_report_data(
                     start_node=st.session_state.report_start_node,
                     stops_data=st.session_state.report_stops_data,
                     routes=st.session_state.report_routes,
                     stats=st.session_state.optimization_stats,
                     use_case=selected_use_case,
+                    live_metrics=live_metrics
                 )
                 json_path = export_report_json(report_data, "outputs/report.json")
                 pdf_path = export_report_pdf(report_data, "outputs/report.pdf")

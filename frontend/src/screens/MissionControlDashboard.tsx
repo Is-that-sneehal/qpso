@@ -28,35 +28,30 @@ export const MissionControlDashboard: React.FC<DashboardProps> = ({
   return (
     <div className="max-w-[1440px] mx-auto px-6 py-8 space-y-10">
       
-      {/* 1. Hero Layout */}
-      <div className="w-full space-y-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff5719]/10 border border-[#ff5719]/30 text-xs font-mono text-[#ffb59e]">
-          <span className="w-2 h-2 rounded-full bg-[#ff5719] animate-pulse"></span>
-          <span>NEXT-GEN ROUTE OPTIMIZATION ENGINE</span>
-        </div>
-
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-bold tracking-tight text-[#e9def5] leading-tight">
+      {/* 1. Hero Layout - Centered Single Line Professional Hero */}
+      <div className="w-full max-w-6xl mx-auto text-center space-y-6 py-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-[#e9def5] leading-tight w-full mx-auto sm:whitespace-nowrap">
           Intelligence at the{' '}
           <span className="bg-gradient-to-r from-[#ff5719] via-[#ffb59e] to-[#9dcaff] bg-clip-text text-transparent">
             speed of light
           </span>
         </h1>
 
-        <p className="text-base md:text-xl text-[#e6beb2]/80 leading-relaxed max-w-3xl">
+        <p className="text-base sm:text-lg md:text-xl text-[#e6beb2]/85 leading-relaxed max-w-2xl mx-auto font-light">
           Next-generation route optimization powered by quantum-inspired algorithms. Navigate chaos with pinpoint precision under real-world traffic dynamics.
         </p>
 
-        <div className="flex items-center gap-4 pt-2">
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
           <button
             onClick={onNavigateToSimulation}
-            className="btn-ember-gradient px-7 py-3.5 text-sm font-semibold flex items-center gap-2"
+            className="btn-ember-gradient px-8 py-3.5 text-sm font-semibold flex items-center gap-2 shadow-lg shadow-[#ff5719]/25 hover:shadow-[#ff5719]/40 transition cursor-pointer"
           >
             <Play className="w-4 h-4 fill-white" />
             <span>Deploy Engine</span>
           </button>
           <button
             onClick={onNavigateToEngine}
-            className="px-7 py-3.5 text-sm font-semibold rounded-lg border border-[#5c4037] text-[#e9def5] hover:bg-[#221d2d] transition flex items-center gap-2"
+            className="px-8 py-3.5 text-sm font-semibold rounded-lg border border-[#5c4037] text-[#e9def5] hover:bg-[#221d2d] transition flex items-center gap-2 cursor-pointer"
           >
             <BarChart2 className="w-4 h-4 text-[#9dcaff]" />
             <span>View Engine Tuning</span>
@@ -151,19 +146,6 @@ export const MissionControlDashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* 4. Trust Strip */}
-      <div className="py-6 border-t border-b border-[#5c4037]/20 text-center space-y-4">
-        <span className="text-[11px] font-mono uppercase text-[#e6beb2]/50 tracking-widest">
-          TRUSTED BY GLOBAL TRANSIT NETWORKS
-        </span>
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-40 font-mono text-sm tracking-widest text-[#e9def5]">
-          <span>AEROLOGISTICS</span>
-          <span>URBANTRANSIT</span>
-          <span>NEXUS</span>
-          <span>SYS-Q</span>
-          <span>METROCORE</span>
-        </div>
-      </div>
 
     </div>
   );

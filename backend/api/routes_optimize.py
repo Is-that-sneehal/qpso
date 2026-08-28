@@ -317,7 +317,8 @@ def generate_and_download_report(run_id: str, format: str = "pdf", use_case: str
         stops_data=stops_data,
         routes=routes,
         stats=stats,
-        use_case=use_case
+        use_case=use_case,
+        live_metrics=result.get("metrics")
     )
     
     os.makedirs("outputs", exist_ok=True)

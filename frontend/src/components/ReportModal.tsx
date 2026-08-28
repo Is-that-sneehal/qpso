@@ -182,7 +182,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                   <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
                 </div>
                 <div className="text-xl font-bold text-[#e9def5]">
-                  {reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0} min
+                  {reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0} min ({( (reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0) / 60 ).toFixed(1)} hrs)
                 </div>
                 <div className="text-[10px] text-[#e6beb2]/60 font-mono">
                   Saved {metrics.time_saved_hrs || 2.4} hrs
@@ -260,7 +260,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                       <div className="flex items-center gap-3 text-xs font-mono text-[#e6beb2]/70">
                         <span>{vRoute.distance_km || 0} km</span>
                         <span>•</span>
-                        <span>{vRoute.time_min || 0} min</span>
+                        <span>{vRoute.time_min || 0} min ({(((vRoute.time_min || 0)) / 60).toFixed(1)} hrs)</span>
                         <span>•</span>
                         <span className="text-[#9dcaff]">{vRoute.stops?.length || 0} waypoints</span>
                       </div>

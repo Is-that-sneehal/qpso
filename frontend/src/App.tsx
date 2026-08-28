@@ -4,7 +4,7 @@ import { Footer } from './components/Footer';
 import { MissionControlDashboard } from './screens/MissionControlDashboard';
 import { LiveSimulationControl } from './screens/LiveSimulationControl';
 import { OptimizationEngine } from './screens/OptimizationEngine';
-import { NetworkDiagnostics } from './screens/NetworkDiagnostics';
+import { QPSOImplementation } from './screens/QPSOImplementation';
 import { SystemSettings } from './screens/SystemSettings';
 import { ReportModal } from './components/ReportModal';
 import { runOptimization } from './api/client';
@@ -81,8 +81,11 @@ export function App() {
             />
           )}
 
-          {currentTab === 'network-health' && (
-            <NetworkDiagnostics />
+          {currentTab === 'qpso-implementation' && (
+            <QPSOImplementation
+              optimizationResult={optimizationResult}
+              startLocation={startLocation}
+            />
           )}
 
           {currentTab === 'system-settings' && (
@@ -99,7 +102,10 @@ export function App() {
         startLocation={startLocation}
       />
 
-      <Footer />
+      <Footer
+        onSelectTab={setCurrentTab}
+        onOpenReport={() => setGlobalReportModalOpen(true)}
+      />
     </div>
   );
 }

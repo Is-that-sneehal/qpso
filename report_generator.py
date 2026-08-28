@@ -26,7 +26,8 @@ def generate_report_data(
     routes: List[List[Dict[str, Any]]],
     stats: Dict[str, Any],
     use_case: str = "generic",
-    benchmark_results: Optional[Dict[str, Any]] = None
+    benchmark_results: Optional[Dict[str, Any]] = None,
+    live_metrics: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
     """
     Builds ONE JSON-serializable dict — the single source of truth for both
@@ -39,6 +40,7 @@ def generate_report_data(
         stats: the stats dict already returned by the solver
         use_case: 'delivery' | 'emergency' | 'generic' (default 'generic')
         benchmark_results: optional dict from benchmark comparison
+        live_metrics: optional dict containing real-time dashboard KPIs
 
     Returns:
         JSON-serializable report dictionary.
@@ -47,6 +49,8 @@ def generate_report_data(
     normalized_use_case = use_case.lower() if isinstance(use_case, str) and use_case.lower() in valid_use_cases else "generic"
 
     stats = stats or {}
+    live_metrics = live_metrics or stats.get("metrics") or {}
+
     traffic_segs = stats.get("traffic_segments")
     has_traffic = (
         traffic_segs is not None
@@ -58,8 +62,8 @@ def generate_report_data(
 
     # --- 1. Vehicle Routes Processing & Calculations ---
     vehicle_routes_list = []
-    total_distance_km = 0.0
-    total_time_hours = 0.0
+    calc_total_distance_km = 0.0
+    calc_total_time_hours = 0.0
     total_traffic_delay_min = 0.0 if has_traffic else None
     
     any_window_defined = False
@@ -70,6 +74,8 @@ def generate_report_data(
     high_count = 0
     med_count = 0
     low_count = 0
+
+    live_vehicles = live_metrics.get("vehicles", [])
 
     for v_idx, route in enumerate(routes):
         v_dist_km = 0.0
@@ -82,6 +88,10 @@ def generate_report_data(
             if (has_traffic and v_idx < len(traffic_segs) and isinstance(traffic_segs[v_idx], list))
             else []
         )
+
+        live_v_metric = live_vehicles[v_idx] if v_idx < len(live_vehicles) and isinstance(live_vehicles[v_idx], dict) else {}
+        live_v_dist = live_v_metric.get("dist_km", live_v_metric.get("dist"))
+        live_v_time = live_v_metric.get("time_min", live_v_metric.get("time"))
 
         for s_idx, node in enumerate(route):
             coords = node.get("coords", (0.0, 0.0))
@@ -145,14 +155,12 @@ def generate_report_data(
                 if time_window:
                     any_window_defined = True
                     total_window_stops += 1
-                    # On time if vehicle arrives before or within time window end
                     if arrival_time <= time_window[1]:
                         on_time = True
                         on_time_stops_count += 1
                     else:
                         on_time = False
 
-                    # If arrived before start of window, wait until start
                     if arrival_time < time_window[0]:
                         curr_time_hrs = time_window[0]
 
@@ -170,21 +178,48 @@ def generate_report_data(
                 "leg_traffic_level": leg_traffic_level
             })
 
-        v_dist_km = round(v_dist_km, 2)
-        v_time_hrs = round(v_time_hrs, 2)
-        total_distance_km += v_dist_km
-        total_time_hours += v_time_hrs
+        final_v_dist_km = round(float(live_v_dist), 2) if live_v_dist is not None else round(v_dist_km, 2)
+        if live_v_time is not None:
+            final_v_time_min = round(float(live_v_time), 1)
+            final_v_time_hrs = round(final_v_time_min / 60.0, 2)
+        else:
+            final_v_time_hrs = round(v_time_hrs, 2)
+            final_v_time_min = round(final_v_time_hrs * 60.0, 1)
+
+        calc_total_distance_km += final_v_dist_km
+        calc_total_time_hours += final_v_time_hrs
 
         vehicle_routes_list.append({
             "vehicle_id": v_idx + 1,
             "stops": stops_output,
-            "vehicle_distance_km": v_dist_km,
-            "vehicle_time_hours": v_time_hrs
+            "vehicle_distance_km": final_v_dist_km,
+            "vehicle_time_minutes": final_v_time_min,
+            "vehicle_time_hours": final_v_time_hrs
         })
 
-    total_distance_km = round(total_distance_km, 2)
-    total_time_hours = round(total_time_hours, 2)
-    estimated_fuel_cost = round(total_distance_km * FUEL_COST_PER_KM, 2)
+    # Override total metrics with live_metrics if available
+    total_distance_km = round(float(live_metrics.get("total_distance_km")), 2) if live_metrics.get("total_distance_km") is not None else round(calc_total_distance_km, 2)
+    
+    if live_metrics.get("total_time_min") is not None:
+        total_time_min = round(float(live_metrics.get("total_time_min")), 1)
+        total_time_hours = round(total_time_min / 60.0, 2)
+    elif live_metrics.get("total_time_hours") is not None:
+        total_time_hours = round(float(live_metrics.get("total_time_hours")), 2)
+        total_time_min = round(total_time_hours * 60.0, 1)
+    else:
+        total_time_hours = round(calc_total_time_hours, 2)
+        total_time_min = round(total_time_hours * 60.0, 1)
+
+    time_saved_hrs = round(float(live_metrics.get("time_saved_hrs")), 1) if live_metrics.get("time_saved_hrs") is not None else round((((total_distance_km * 1.25) - total_distance_km) / 40.0), 1)
+    co2_reduction_kg = round(float(live_metrics.get("co2_reduction_kg")), 1) if live_metrics.get("co2_reduction_kg") is not None else round(((total_distance_km * 1.25) - total_distance_km) * 0.12, 1)
+    fuel_liters = round(float(live_metrics.get("fuel_liters")), 1) if live_metrics.get("fuel_liters") is not None else round(total_distance_km / 12.0, 1)
+
+    if live_metrics.get("cost_inr") is not None:
+        estimated_fuel_cost = round(float(live_metrics.get("cost_inr")), 2)
+    elif live_metrics.get("estimated_fuel_cost") is not None:
+        estimated_fuel_cost = round(float(live_metrics.get("estimated_fuel_cost")), 2)
+    else:
+        estimated_fuel_cost = round(total_distance_km * FUEL_COST_PER_KM, 2)
 
     if total_traffic_delay_min is not None:
         total_traffic_delay_min = round(total_traffic_delay_min, 1)
@@ -281,7 +316,12 @@ def generate_report_data(
         "summary": {
             "total_distance_km": total_distance_km,
             "total_time_hours": total_time_hours,
+            "total_time_minutes": total_time_min,
+            "time_saved_hrs": time_saved_hrs,
+            "co2_reduction_kg": co2_reduction_kg,
+            "fuel_liters": fuel_liters,
             "estimated_fuel_cost": estimated_fuel_cost,
+            "estimated_fuel_cost_inr": estimated_fuel_cost,
             "traffic_delay_minutes": total_traffic_delay_min,
             "on_time_rate_pct": on_time_rate_pct
         },
@@ -383,8 +423,21 @@ def export_report_pdf(report_data: Dict[str, Any], output_path: str = "report.pd
         pdf.set_text_color(40, 40, 40)
 
         dist_val = f"{summary.get('total_distance_km', 0.0)} km"
-        time_val = f"{summary.get('total_time_hours', 0.0)} hrs"
-        cost_val = f"Rs.{summary.get('estimated_fuel_cost', 0.0)} (assumed Rs.{FUEL_COST_PER_KM}/km)"
+        
+        time_min = summary.get('total_time_minutes')
+        time_hrs = summary.get('total_time_hours', 0.0)
+        time_val = f"{time_min} min ({time_hrs} hrs)" if time_min is not None else f"{time_hrs} hrs"
+
+        time_saved = summary.get('time_saved_hrs')
+        time_saved_val = f"{time_saved} hrs vs baseline" if time_saved is not None else "N/A"
+
+        co2 = summary.get('co2_reduction_kg')
+        co2_val = f"{co2} kg CO2 reduction" if co2 is not None else "N/A"
+
+        cost_inr = summary.get('estimated_fuel_cost_inr', summary.get('estimated_fuel_cost', 0.0))
+        fuel_l = summary.get('fuel_liters')
+        cost_val = f"Rs.{cost_inr} (~{fuel_l} L fuel)" if fuel_l is not None else f"Rs.{cost_inr}"
+
         delay_raw = summary.get("traffic_delay_minutes")
         delay_val = f"{delay_raw} mins" if delay_raw is not None else "N/A (fallback mode)"
         on_time_raw = summary.get("on_time_rate_pct")
@@ -393,7 +446,9 @@ def export_report_pdf(report_data: Dict[str, Any], output_path: str = "report.pd
         summary_rows = [
             ("Total Fleet Distance", dist_val),
             ("Total Travel Time", time_val),
-            ("Estimated Fuel Cost", cost_val),
+            ("Time Saved (Optimization)", time_saved_val),
+            ("CO2 Reduction Offset", co2_val),
+            ("Estimated Fuel & Cost", cost_val),
             ("Traffic Delay Estimate", delay_val),
             ("On-Time Delivery Rate", on_time_val),
             ("Vehicles / Customer Stops", f"{meta.get('n_vehicles', 1)} vehicles / {meta.get('n_stops', 0)} stops")
@@ -415,11 +470,13 @@ def export_report_pdf(report_data: Dict[str, Any], output_path: str = "report.pd
         for v in v_routes:
             v_id = v.get("vehicle_id", 1)
             v_dist = v.get("vehicle_distance_km", 0.0)
-            v_time = v.get("vehicle_time_hours", 0.0)
+            v_min = v.get("vehicle_time_minutes")
+            v_hrs = v.get("vehicle_time_hours", 0.0)
+            dur_str = f"{v_min} min ({v_hrs} hrs)" if v_min is not None else f"{v_hrs} hrs"
 
             pdf.set_font("Helvetica", "B", 10)
             pdf.set_text_color(45, 55, 80)
-            pdf.cell(0, 6, f"Vehicle #{v_id} - Distance: {v_dist} km | Duration: {v_time} hrs", ln=True)
+            pdf.cell(0, 6, f"Vehicle #{v_id} - Distance: {v_dist} km | Duration: {dur_str}", ln=True)
 
             # Table Header
             pdf.set_font("Helvetica", "B", 8)
