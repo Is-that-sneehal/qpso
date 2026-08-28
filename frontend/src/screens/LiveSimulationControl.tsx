@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Play, RefreshCw, Layers, Truck, Clock, ShieldAlert } from 'lucide-react';
+import { Play, RefreshCw, Layers, Truck, Clock, ShieldAlert, FileText, Download } from 'lucide-react';
 import { RouteMap } from '../components/RouteMap';
 import { LocationSearchInput } from '../components/LocationSearchInput';
+import { ReportModal } from '../components/ReportModal';
 import { runOptimization } from '../api/client';
 
 interface LiveSimulationProps {
@@ -27,6 +28,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
   const [vehicleCount, setVehicleCount] = useState<number>(1);
   const [roundTrip] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showReportModal, setShowReportModal] = useState<boolean>(false);
 
   const presets = [
     { id: 'manhattan-core', label: 'Simulating: Manhattan Core', status: 'ACTIVE', color: 'text-[#ff5719]' },
@@ -65,6 +67,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
           qpso_params: qpsoParams
         });
         setOptimizationResult(res);
+        return res;
       } else {
         // Build custom stops list from intermediateStops + destinationLocation
         const allStops = [
@@ -80,12 +83,21 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
           qpso_params: qpsoParams
         });
         setOptimizationResult(res);
+        return res;
       }
     } catch (err) {
       console.error("Optimization error:", err);
+      return null;
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenReport = async () => {
+    if (!optimizationResult) {
+      await handleRunOptimization();
+    }
+    setShowReportModal(true);
   };
 
   const metrics = optimizationResult?.metrics || {
@@ -103,7 +115,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
       {/* Search Header Bar (Section 4.1 Global Search) */}
       <div className="quantum-glow-card p-4 rounded-xl space-y-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-5/12">
             <LocationSearchInput
               label="Origin (From)"
               placeholder="Type any origin address or city on Earth..."
@@ -111,7 +123,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
               onSelectLocation={(loc) => setStartLocation(loc)}
             />
           </div>
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-5/12">
             <LocationSearchInput
               label="Destination (To)"
               placeholder="Type destination..."
@@ -119,14 +131,24 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
               onSelectLocation={(loc) => setDestinationLocation(loc)}
             />
           </div>
-          <div className="w-full md:w-auto flex items-end gap-2">
+          <div className="w-full md:w-auto flex items-end gap-2.5">
             <button
               onClick={() => handleRunOptimization()}
               disabled={loading}
-              className="w-full md:w-auto btn-ember-gradient px-6 py-2.5 text-xs uppercase font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0"
+              className="flex-1 md:flex-initial btn-ember-gradient px-5 py-2.5 text-xs uppercase font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0 shadow-lg shadow-[#ff5719]/20"
             >
               {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-white" />}
               <span>{loading ? 'Optimizing...' : 'Run Quantum Router'}</span>
+            </button>
+
+            <button
+              onClick={handleOpenReport}
+              disabled={loading}
+              className="flex-1 md:flex-initial bg-[#1e1929] hover:bg-[#251f33] border border-[#ff5719]/60 hover:border-[#ff5719] text-[#e9def5] px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 mt-4 md:mt-0 transition shadow-sm"
+              title="Generate & View Fleet Optimization Report"
+            >
+              <FileText className="w-4 h-4 text-[#ff5719]" />
+              <span>Report</span>
             </button>
           </div>
         </div>
@@ -241,6 +263,14 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
             </button>
 
             <button
+              onClick={handleOpenReport}
+              className="w-full bg-[#110b1b] hover:bg-[#221d2d] border border-[#ff5719]/60 hover:border-[#ff5719] text-[#ffb59e] py-2.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition"
+            >
+              <FileText className="w-3.5 h-3.5 text-[#ff5719]" />
+              <span>📄 Export Audit Report</span>
+            </button>
+
+            <button
               onClick={() => alert("Emergency Override Initiated: All vehicles holding position.")}
               className="w-full bg-[#110b1b] border border-[#ff4444] text-[#ff6666] hover:bg-[#ff4444]/10 py-2.5 px-3 rounded-lg text-xs font-mono font-semibold flex items-center justify-center gap-2 transition"
             >
@@ -266,6 +296,14 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                 <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
                 <span>TIME TAKEN: {metrics.total_time_min || 118} min</span>
               </div>
+              <button
+                onClick={handleOpenReport}
+                className="bg-[#110b1b]/90 hover:bg-[#1e1929] border border-[#ff5719]/60 hover:border-[#ff5719] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md flex items-center gap-1.5 transition cursor-pointer"
+                title="Download Optimization PDF/JSON Report"
+              >
+                <Download className="w-3.5 h-3.5 text-[#ff5719]" />
+                <span>Download Report</span>
+              </button>
             </div>
 
             <RouteMap
@@ -323,8 +361,14 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                   <Truck className="w-3.5 h-3.5" />
                 </div>
                 <div className="text-2xl font-light text-[#e9def5]">{vehicleCount} units</div>
-                <div className="text-[10px] font-mono text-[#d0bcff] flex items-center gap-1">
+                <div className="text-[10px] font-mono text-[#d0bcff] flex items-center justify-between">
                   <span>Mixed Fleet Active</span>
+                  <button
+                    onClick={handleOpenReport}
+                    className="text-[#ffb59e] hover:underline flex items-center gap-0.5"
+                  >
+                    View Report &rarr;
+                  </button>
                 </div>
               </div>
 
@@ -334,6 +378,15 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
         </div>
 
       </div>
+
+      {/* Interactive Report Modal */}
+      <ReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        runId={optimizationResult?.run_id}
+        optimizationResult={optimizationResult}
+        startLocation={startLocation}
+      />
 
     </div>
   );

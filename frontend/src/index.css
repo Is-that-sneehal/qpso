@@ -99,3 +99,9 @@
 .leaflet-popup-tip {
   background: #1e1929 !important;
 }
+
+/* Map Dark Theme Tile Filter (High-contrast, sleek cyberpunk dark mode) */
+.map-tiles-dark {
+  filter: brightness(0.65) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.75);
+}
+

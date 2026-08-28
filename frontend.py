@@ -505,3 +505,52 @@ def render_analytics_view():
                 st.line_chart(chart_df, x="Iteration", y="Energy", color="#663af3")
     else:
         st.info("No optimization data available. Run the optimizer first.")
+
+
+def render_download_report_buttons(json_path, pdf_path_or_none):
+    """
+    Renders two st.download_button widgets (JSON always, PDF only if
+    pdf_path_or_none is not None) styled consistently with the existing
+    badge components (reuses existing CSS classes). Reads file bytes and
+    passes to st.download_button. Does not compute anything — pure
+    rendering of already-generated files.
+    """
+    import os
+
+    st.markdown(
+        '<div class="authkit-eyebrow" style="margin-top:12px;">'
+        '<span>Optimization Report</span></div>',
+        unsafe_allow_html=True,
+    )
+
+    col_json, col_pdf = st.columns(2)
+
+    # JSON download — always available
+    with col_json:
+        if json_path and os.path.isfile(json_path):
+            with open(json_path, "rb") as f:
+                json_bytes = f.read()
+            st.download_button(
+                label="📄 Download Report (JSON)",
+                data=json_bytes,
+                file_name="optimization_report.json",
+                mime="application/json",
+                use_container_width=True,
+            )
+        else:
+            st.warning("JSON report file not found.")
+
+    # PDF download — only if generation succeeded
+    with col_pdf:
+        if pdf_path_or_none and os.path.isfile(pdf_path_or_none):
+            with open(pdf_path_or_none, "rb") as f:
+                pdf_bytes = f.read()
+            st.download_button(
+                label="📑 Download Report (PDF)",
+                data=pdf_bytes,
+                file_name="optimization_report.pdf",
+                mime="application/pdf",
+                use_container_width=True,
+            )
+        else:
+            st.info("PDF report unavailable (fpdf2 may not be installed).")

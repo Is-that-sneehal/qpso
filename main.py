@@ -6,6 +6,7 @@ import sessionstate
 import logic
 import api
 import frontend
+from report_generator import generate_report_data, export_report_json, export_report_pdf
 
 # 1. Setup Page & State
 st.set_page_config(**config.PAGE_CONFIG)
@@ -118,6 +119,11 @@ if go_btn:
             
             # Store Quantum Analytics
             st.session_state.optimization_stats = stats
+
+            # Store solver outputs for report generation (persist across rerun)
+            st.session_state.report_routes = routes_list
+            st.session_state.report_start_node = start_loc
+            st.session_state.report_stops_data = list(st.session_state.stops_data)
             
             st.session_state.solver_status = "Completed"
             status.update(label="Optimization Complete!", state="complete", expanded=False)
@@ -130,5 +136,29 @@ if page == "Route Optimizer":
         st.info("👈 Please configure your stops in the sidebar and click RUN to start.")
     else:
         frontend.render_optimizer_view()
+
+        # ── 5. Report Generation (additive, end of flow) ─────────────
+        if (
+            st.session_state.get("report_routes")
+            and st.session_state.get("optimization_stats")
+        ):
+            st.markdown("---")
+            selected_use_case = st.selectbox(
+                "Report type",
+                ["generic", "delivery", "emergency"],
+                help="Controls the recommendations section of the report.",
+            )
+            if st.button("📊 Generate Report"):
+                report_data = generate_report_data(
+                    start_node=st.session_state.report_start_node,
+                    stops_data=st.session_state.report_stops_data,
+                    routes=st.session_state.report_routes,
+                    stats=st.session_state.optimization_stats,
+                    use_case=selected_use_case,
+                )
+                json_path = export_report_json(report_data, "outputs/report.json")
+                pdf_path = export_report_pdf(report_data, "outputs/report.pdf")
+                frontend.render_download_report_buttons(json_path, pdf_path)
+
 elif page == "Quantum Analytics":
     frontend.render_analytics_view()

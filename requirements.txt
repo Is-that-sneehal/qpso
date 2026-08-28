@@ -7,3 +7,4 @@ requests
 numpy
 geopy
 scikit-learn
+fpdf2

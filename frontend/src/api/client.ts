@@ -65,3 +65,16 @@ export async function fetchNetworkHealth() {
   }
   return await res.json();
 }
+
+export function getReportDownloadUrl(runId: string, format: 'pdf' | 'json' = 'pdf', useCase: string = 'generic'): string {
+  return `${API_BASE}/report/${runId}?format=${format}&use_case=${encodeURIComponent(useCase)}`;
+}
+
+export async function fetchReportData(runId: string, useCase: string = 'generic') {
+  const res = await fetch(`${API_BASE}/report/${runId}?format=json&use_case=${encodeURIComponent(useCase)}`);
+  if (!res.ok) {
+    throw new Error(`Failed to load report data: ${res.statusText}`);
+  }
+  return await res.json();
+}
+

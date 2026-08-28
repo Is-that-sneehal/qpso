@@ -5,9 +5,11 @@ interface NavbarProps {
   currentTab: string;
   onSelectTab: (tab: string) => void;
   onStartOptimization: () => void;
+  onOpenReport?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStartOptimization }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStartOptimization, onOpenReport }) => {
+
   const navLinks = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'live-simulation', label: 'Live Simulation' },
@@ -64,6 +66,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
 
         {/* Right Cluster */}
         <div className="flex items-center gap-3">
+          {onOpenReport && (
+            <button
+              onClick={onOpenReport}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#ff5719]/60 text-[#ffb59e] hover:bg-[#ff5719]/10 transition"
+              title="View & Download Route Audit Report"
+            >
+              <span>📄 Report</span>
+            </button>
+          )}
+
           <a
             href="https://github.com/pujit23/QRoute23"
             target="_blank"
@@ -90,6 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
             <User className="w-4 h-4" />
           </div>
         </div>
+
 
       </div>
     </header>

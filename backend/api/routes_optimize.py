@@ -13,6 +13,13 @@ from backend.core.benchmarks.classical_pso import run_classical_pso
 from backend.core.benchmarks.exact_solver import run_held_karp_exact
 from backend.api.websocket import ws_manager
 import asyncio
+from fastapi.responses import FileResponse
+import os
+import sys
+
+# Import report_generator from the root directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+from report_generator import generate_report_data, export_report_json, export_report_pdf
 
 router = APIRouter(prefix="/api", tags=["Optimization & Benchmark"])
 
@@ -283,3 +290,45 @@ def get_network_health():
         "summary": summary,
         "cities": cities
     }
+
+@router.get("/report/{run_id}")
+def generate_and_download_report(run_id: str, format: str = "pdf", use_case: str = "generic"):
+    cache_item = RUN_CACHE.get(run_id)
+    if not cache_item:
+        raise HTTPException(status_code=404, detail="Run ID not found")
+        
+    start_node = cache_item["start_node"]
+    stops_data = cache_item["stops_data"]
+    result = cache_item["result"]
+    
+    # Reconstruct routes format for report generator
+    routes = [route_obj["stops"] for route_obj in result["routes"]]
+    
+    stats = {
+        "algorithm": "QPSO-VRP",
+        "history": result.get("telemetry", {}).get("history", []),
+        "tunnels": result.get("telemetry", {}).get("tunnels", 0),
+        "traffic_segments": None,
+        "runtime_seconds": result.get("telemetry", {}).get("execution_ms", 0) / 1000.0,
+    }
+    
+    report_data = generate_report_data(
+        start_node=start_node,
+        stops_data=stops_data,
+        routes=routes,
+        stats=stats,
+        use_case=use_case
+    )
+    
+    os.makedirs("outputs", exist_ok=True)
+    if format.lower() == "pdf":
+        out_path = f"outputs/report_{run_id}.pdf"
+        res_path = export_report_pdf(report_data, out_path)
+        if not res_path:
+            raise HTTPException(status_code=500, detail="PDF generation failed")
+        return FileResponse(res_path, media_type="application/pdf", filename=f"optimization_report_{run_id}.pdf")
+    else:
+        out_path = f"outputs/report_{run_id}.json"
+        res_path = export_report_json(report_data, out_path)
+        return FileResponse(res_path, media_type="application/json", filename=f"optimization_report_{run_id}.json")
+

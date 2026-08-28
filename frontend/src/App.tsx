@@ -6,6 +6,8 @@ import { LiveSimulationControl } from './screens/LiveSimulationControl';
 import { OptimizationEngine } from './screens/OptimizationEngine';
 import { NetworkDiagnostics } from './screens/NetworkDiagnostics';
 import { SystemSettings } from './screens/SystemSettings';
+import { ReportModal } from './components/ReportModal';
+import { runOptimization } from './api/client';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
@@ -23,9 +25,22 @@ export function App() {
   });
 
   const [optimizationResult, setOptimizationResult] = useState<any>(null);
+  const [globalReportModalOpen, setGlobalReportModalOpen] = useState<boolean>(false);
 
   const handleStartOptimizationFromNav = () => {
     setCurrentTab('live-simulation');
+  };
+
+  const handleOpenGlobalReport = async () => {
+    if (!optimizationResult) {
+      try {
+        const res = await runOptimization({ preset: 'manhattan-core', qpso_params: qpsoParams });
+        setOptimizationResult(res);
+      } catch (err) {
+        console.error("Auto-run for report failed:", err);
+      }
+    }
+    setGlobalReportModalOpen(true);
   };
 
   return (
@@ -35,6 +50,7 @@ export function App() {
           currentTab={currentTab}
           onSelectTab={(tab) => setCurrentTab(tab)}
           onStartOptimization={handleStartOptimizationFromNav}
+          onOpenReport={handleOpenGlobalReport}
         />
 
         <main>
@@ -74,6 +90,14 @@ export function App() {
           )}
         </main>
       </div>
+
+      <ReportModal
+        isOpen={globalReportModalOpen}
+        onClose={() => setGlobalReportModalOpen(false)}
+        runId={optimizationResult?.run_id}
+        optimizationResult={optimizationResult}
+        startLocation={startLocation}
+      />
 
       <Footer />
     </div>
