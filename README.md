@@ -1,95 +1,131 @@
 # QRoute23: Quantum-Inspired Intelligent Traffic Route Optimizer
 
-A quantum-behaved route optimization and disruption management platform for dynamic Vehicle Routing Problems (VRP), Multi-Vehicle Delivery Scheduling (MTSP), and real-time traffic delay recovery.
+A state-of-the-art quantum-behaved route optimization and disruption management platform for dynamic Vehicle Routing Problems (VRP), Multi-Vehicle Delivery Scheduling (MTSP), and real-time traffic delay recovery.
+
+---
+
+## 🌟 Key Features
+
+- ⚛️ **QPSO Mathematical Formulation & Live Engine**: Interactive educational dashboard showcasing the quantum physics mechanics of QPSO, side-by-side route trade-off calculations (Dijkstra/Average vs. QPSO), and a step-by-step numerical execution simulator.
+- 🚦 **Real-Time Traffic Flow Integration**: Ingests live TomTom Traffic API data and adjusts edge travel speeds dynamically to bypass traffic bottlenecks.
+- 📊 **Mission Control Dashboard**: High-impact centered command center providing real-time fleet health, flow topology, and active node synchronization.
+- 🚚 **Live Vehicle Dispatch Simulation**: Real-time simulation control featuring animated vehicle routes, traffic delay calculations, and standardized transit metrics: `{minutes} min ({hours} hrs)`.
+- 📄 **Automated PDF Route Audit Generator**: Generates comprehensive PDF audit reports with synchronized telemetry data, fuel savings, and route itineraries.
+
+---
+
+## ⚛️ Quantum-Behaved PSO (QPSO) Mathematics
+
+Unlike classical Particle Swarm Optimization (PSO) which uses deterministic velocity vectors and risks local minima trapping, QPSO models swarm particles as quantum wavefunctions bound inside a 1D Delta-Potential Well.
+
+### 1. Quantum Delta-Potential Position Update
+$$x_i(t+1) = p_i(t) \pm \alpha \cdot | \text{mbest}(t) - x_i(t) | \cdot \ln(1 / u), \quad u \sim U(0, 1)$$
+
+### 2. Mean Best Position ($\text{mbest}$) Center of Mass
+$$\text{mbest}(t) = \frac{1}{N} \sum_{i=1}^{N} p_i(t)$$
+
+### 3. Stochastic Local Attractor ($p_i$)
+$$p_i(t) = \phi \cdot pbest_i(t) + (1 - \phi) \cdot gbest(t), \quad \phi \sim U(0, 1)$$
+
+### 4. Smallest Position Value (SPV) Mapping
+Sorts continuous position vector coordinates $x_i \in \mathbb{R}^d$ to generate discrete customer stop permutations $\pi_i$, which are split across vehicle capacity and time window constraints.
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Requirements & Setup
-- Python 3.12+
-- Node.js 18+ (for frontend)
+### 1. Requirements
+- **Python**: 3.12+
+- **Node.js**: 18+ (for frontend compilation)
+
+### 2. Installation
 
 ```bash
-# Clone and checkout the feature branch
-git clone https://github.com/pujit23/QRoute23.git
-cd QRoute23
-git checkout feature/qpso-map-integration
+# Clone the repository
+git clone https://github.com/Is-that-sneehal/qpso.git
+cd qpso
+
+# Create & activate a virtual environment
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
 
 # Install Python dependencies
 pip install -r requirements.txt
-pip install pytest
 ```
 
-### 2. Running the Application
+### 3. Running the Unified Application (Recommended)
 
-#### Option A: FastAPI Backend & React UI (Unified on Port 8000)
-```bash
-python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
-```
-- Web Application: [http://localhost:8000](http://localhost:8000)
-- Interactive API Docs (Swagger): [http://localhost:8000/docs](http://localhost:8000/docs)
+Build the React frontend distribution and start the FastAPI production server on port 8000:
 
-#### Option B: React Frontend Dev Server (Port 3000)
 ```bash
+# 1. Build Frontend Distribution
 cd frontend
 npm install
+npm run build
+cd ..
+
+# 2. Start FastAPI Server
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+- **Web Platform**: [http://localhost:8000](http://localhost:8000)
+- **API Documentation (Swagger UI)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+### 4. Frontend Development Mode
+
+For hot-reloading frontend development:
+
+```bash
+cd frontend
 npm run dev
 ```
+- **Vite Dev Server**: [http://localhost:3000](http://localhost:3000)
 
-#### Option C: Streamlit Dashboard (Port 8501)
-```bash
-python -m streamlit run main.py --server.port=8501
+---
+
+## 📁 Repository Structure
+
+```
+qpso/
+├── backend/                  # FastAPI Application & REST Endpoints
+│   ├── main.py               # Application entry point & static mount
+│   ├── api/
+│   │   ├── routes_optimize.py# REST optimization API
+│   │   └── routes_reports.py # PDF report download routes
+├── qpso/                     # Quantum Optimization Core Engine
+│   ├── algorithm.py          # Delta-Potential QPSO solver
+│   ├── operators/            # Chaos mutation & Differential Evolution operators
+│   └── map_adapter.py        # Graph distance matrix & traffic adapter
+├── frontend/                 # React 18 + Vite + Tailwind CSS Application
+│   ├── src/
+│   │   ├── screens/          # Dashboard, Simulation, Engine & QPSO Implementation
+│   │   ├── components/       # Navbar, Footer, RouteMap & ReportModal
+│   │   └── App.tsx           # Main application routing & state
+├── report_generator.py       # ReportLab PDF Generation Engine
+├── tests/                    # Pytest Suite (40 Passing Tests)
+└── requirements.txt          # Python dependencies
 ```
 
 ---
 
-## ⚛️ Quantum-Behaved PSO v2 Engine (`qpso/`)
+## 🧪 Testing & Validation
 
-The `qpso/` package introduces a state-of-the-art metaheuristic optimization engine with zero regression to existing systems:
-
-- **Core QPSO** (Sun, Feng, Xu formulation): Vectorized wave function potential well sampling without classical velocity inertia.
-- **Border Mutation & Chaos Operators** (Li, Li & Wang, 2012): Reflect-and-perturb boundary mutation and Logistic/Tent map chaotic local search.
-- **Selective Differential Evolution** (Lim et al., 2020): Stagnation-triggered DE exploration for stagnated particles.
-- **Disruption Management** (Ning, Wang & Hu, 2019): Mid-route forward-only replanning balancing operational recovery cost with schedule deviation penalties.
-
-### Enabling QPSO v2 via Feature Flag
-
-#### In Python Logic:
-```python
-from logic import optimize_route_algo
-
-routes, stats = optimize_route_algo(
-    start={"name": "Depot", "coords": (40.7488, -73.9854)},
-    stops=[{"name": "Stop 1", "coords": (40.7580, -73.9855)}],
-    round_trip=True,
-    fleet_size=1,
-    use_qpso_v2=True  # Feature flag opt-in (default False)
-)
-```
-
-#### In REST API (`POST /api/optimize`):
-```json
-{
-  "preset": "manhattan-core",
-  "optimizer": "qpso_v2",
-  "vehicle_count": 1,
-  "round_trip": true
-}
-```
-
----
-
-## 🧪 Running the Test Suite & Benchmarks
+Run the complete backend test suite:
 
 ```bash
-# Run all unit, integration, and smoke tests
 python -m pytest tests/ -v
-
-# Run the automated multi-algorithm benchmark suite
-python -m qpso.benchmark.report
 ```
 
-Benchmark results are automatically documented in [`docs/qpso/BENCHMARK_RESULTS.md`](docs/qpso/BENCHMARK_RESULTS.md).
-Mathematical equations are detailed in [`docs/qpso/MATH_FORMULATION.md`](docs/qpso/MATH_FORMULATION.md).
-Architecture decisions are logged in [`docs/qpso/DECISIONS.md`](docs/qpso/DECISIONS.md).
+Output:
+```
+============================= 40 passed in 45.68s =============================
+```
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for details.
