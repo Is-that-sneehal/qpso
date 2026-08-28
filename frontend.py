@@ -171,7 +171,7 @@ def _load_stops_from_df(df):
         return 0
 
 
-def render_optimizer_view():
+def render_optimizer_view(traffic_segments=None):
     """Renders the Map, Metrics, and Download."""
     if st.session_state.optimized_route:
         # Safety Check: Handle stale session state from previous versions
@@ -264,30 +264,115 @@ def render_optimizer_view():
 
         # Draw Routes
         if show_routes:
-            for idx, route_entry in enumerate(d['routes_geo']):
-                if isinstance(route_entry, dict):
-                    route_geo = route_entry.get("geo", [])
-                    is_fallback = route_entry.get("is_fallback", False)
-                else:
-                    route_geo = route_entry
-                    is_fallback = False
+            active_traffic = traffic_segments
+            if active_traffic is None and 'traffic_segments' in st.session_state:
+                active_traffic = st.session_state.get('traffic_segments')
 
-                color = route_colors[idx % len(route_colors)] if show_split else _VIOLET
+            if active_traffic:
+                try:
+                    from traffic_provider import edge_midpoint
+                except Exception:
+                    def edge_midpoint(c1, c2):
+                        return ((c1[0] + c2[0]) / 2.0, (c1[1] + c2[1]) / 2.0)
 
-                if is_fallback:
-                    line = folium.PolyLine(
-                        route_geo, color=color, weight=3, opacity=0.65, dash_array="8, 8",
-                        tooltip=f"Vehicle {idx+1} (Approximate Route — Road Geometry Unavailable)"
-                    ).add_to(map_obj)
-                else:
-                    line = folium.PolyLine(
-                        route_geo, color=color, weight=4, opacity=0.85,
-                        tooltip=f"Vehicle {idx+1}"
-                    ).add_to(map_obj)
-                    plugins.PolyLineTextPath(
-                        line, "      ➤      ", repeat=True, offset=6,
-                        attributes={'fill': color, 'font-weight': 'bold', 'font-size': '18'}
-                    ).add_to(map_obj)
+                for idx, route_entry in enumerate(d['routes_geo']):
+                    default_color = route_colors[idx % len(route_colors)] if show_split else _VIOLET
+
+                    if isinstance(active_traffic, list) and len(active_traffic) > 0 and isinstance(active_traffic[0], list):
+                        v_segs = active_traffic[idx] if idx < len(active_traffic) else []
+                    elif isinstance(active_traffic, list) and len(active_traffic) > 0 and isinstance(active_traffic[0], dict):
+                        v_segs = active_traffic if idx == 0 else []
+                    else:
+                        v_segs = []
+
+                    if v_segs:
+                        for seg in v_segs:
+                            from_c = seg.get('from_coords')
+                            to_c = seg.get('to_coords')
+                            if not from_c or not to_c:
+                                continue
+                            level = seg.get('level')
+                            ratio = seg.get('ratio')
+
+                            if level == 'low':
+                                edge_color = '#2ecc71'
+                            elif level == 'medium':
+                                edge_color = '#f39c12'
+                            elif level == 'high':
+                                edge_color = '#e74c3c'
+                            else:
+                                edge_color = default_color
+
+                            folium.PolyLine(
+                                [from_c, to_c],
+                                color=edge_color,
+                                weight=5,
+                                opacity=0.8,
+                                tooltip=f"Vehicle {idx+1}: {seg.get('from', '')} -> {seg.get('to', '')} ({str(level).upper() if level else 'DEFAULT'})"
+                            ).add_to(map_obj)
+
+                            if level == 'high':
+                                mid = edge_midpoint(from_c, to_c)
+                                ratio_pct = f"{int(round(ratio * 100))}%" if ratio is not None else "high"
+                                folium.CircleMarker(
+                                    location=[mid[0], mid[1]],
+                                    radius=6,
+                                    color='#e74c3c',
+                                    fill=True,
+                                    fill_color='#e74c3c',
+                                    fill_opacity=0.9,
+                                    popup=f"Heavy traffic: {ratio_pct} of free-flow speed",
+                                    tooltip=f"Heavy traffic: {ratio_pct} of free-flow speed"
+                                ).add_to(map_obj)
+                    else:
+                        if isinstance(route_entry, dict):
+                            route_geo = route_entry.get("geo", [])
+                            is_fallback = route_entry.get("is_fallback", False)
+                        else:
+                            route_geo = route_entry
+                            is_fallback = False
+
+                        color = default_color
+                        if is_fallback:
+                            line = folium.PolyLine(
+                                route_geo, color=color, weight=3, opacity=0.65, dash_array="8, 8",
+                                tooltip=f"Vehicle {idx+1} (Approximate Route — Road Geometry Unavailable)"
+                            ).add_to(map_obj)
+                        else:
+                            line = folium.PolyLine(
+                                route_geo, color=color, weight=4, opacity=0.85,
+                                tooltip=f"Vehicle {idx+1}"
+                            ).add_to(map_obj)
+                            plugins.PolyLineTextPath(
+                                line, "      ➤      ", repeat=True, offset=6,
+                                attributes={'fill': color, 'font-weight': 'bold', 'font-size': '18'}
+                            ).add_to(map_obj)
+            else:
+                for idx, route_entry in enumerate(d['routes_geo']):
+                    if isinstance(route_entry, dict):
+                        route_geo = route_entry.get("geo", [])
+                        is_fallback = route_entry.get("is_fallback", False)
+                    else:
+                        route_geo = route_entry
+                        is_fallback = False
+
+                    color = route_colors[idx % len(route_colors)] if show_split else _VIOLET
+
+                    if is_fallback:
+                        line = folium.PolyLine(
+                            route_geo, color=color, weight=3, opacity=0.65, dash_array="8, 8",
+                            tooltip=f"Vehicle {idx+1} (Approximate Route — Road Geometry Unavailable)"
+                        ).add_to(map_obj)
+                    else:
+                        line = folium.PolyLine(
+                            route_geo, color=color, weight=4, opacity=0.85,
+                            tooltip=f"Vehicle {idx+1}"
+                        ).add_to(map_obj)
+                        plugins.PolyLineTextPath(
+                            line, "      ➤      ", repeat=True, offset=6,
+                            attributes={'fill': color, 'font-weight': 'bold', 'font-size': '18'}
+                        ).add_to(map_obj)
+
 
         # Draw Markers — frosted circular tiles
         if show_markers:

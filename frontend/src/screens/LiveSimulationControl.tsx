@@ -255,12 +255,16 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
           <div className="quantum-glow-card rounded-2xl p-4 relative">
             
             {/* Top Floating Status Chips */}
-            <div className="absolute top-7 left-7 z-10 flex items-center gap-2">
+            <div className="absolute top-7 left-7 z-10 flex flex-wrap items-center gap-2">
               <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md">
                 ● NODE: {optimizationResult?.run_id || 'RUN-4092'}
               </div>
               <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#9dcaff] backdrop-blur-md">
                 LATENCY: {optimizationResult?.telemetry?.execution_ms || 12}ms
+              </div>
+              <div className="bg-[#110b1b]/90 border border-[#5c4037] px-3 py-1.5 rounded-lg text-xs font-mono text-[#ffb59e] backdrop-blur-md flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
+                <span>TIME TAKEN: {metrics.total_time_min || 118} min</span>
               </div>
             </div>
 
@@ -271,9 +275,22 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
             />
 
             {/* Bottom-Overlaid KPI Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
               
-              {/* Card 1: Time Saved */}
+              {/* Card 1: Time Taken */}
+              <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono text-[#ffb59e]">
+                  <span>Time Taken</span>
+                  <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
+                </div>
+                <div className="text-2xl font-light text-[#e9def5]">{metrics.total_time_min || 118} min</div>
+                <div className="w-full bg-[#221d2d] h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-[#ff5719] h-full w-[80%]"></div>
+                </div>
+                <div className="text-[10px] font-mono text-[#e6beb2]/60">{metrics.total_distance_km || 142.8} km estimated route</div>
+              </div>
+
+              {/* Card 2: Time Saved */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-xs font-mono text-[#ffb59e]">
                   <span>Time Saved</span>
@@ -286,7 +303,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                 <div className="text-[10px] font-mono text-[#e6beb2]/60">+14% vs avg</div>
               </div>
 
-              {/* Card 2: CO2 Reduction */}
+              {/* Card 3: CO2 Reduction */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-xs font-mono text-[#9dcaff]">
                   <span>CO2 Reduction</span>
@@ -299,7 +316,7 @@ export const LiveSimulationControl: React.FC<LiveSimulationProps> = ({
                 <div className="text-[10px] font-mono text-[#9dcaff]">Optimal Zone</div>
               </div>
 
-              {/* Card 3: Active Vehicles */}
+              {/* Card 4: Active Vehicles */}
               <div className="bg-[#110b1b] border border-[#5c4037] p-4 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-xs font-mono text-[#d0bcff]">
                   <span>Active Vehicles</span>
