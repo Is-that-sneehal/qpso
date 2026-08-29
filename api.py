@@ -10,7 +10,15 @@ logger = logging.getLogger("qroute_api")
 logging.basicConfig(level=logging.INFO)
 
 def _get_tomtom_key():
-    """Retrieve TomTom API key from environment variable or Streamlit secrets."""
+    """Retrieve TomTom API key from traffic_provider, environment, secrets, or .env."""
+    try:
+        from traffic_provider import _get_tomtom_key as _tp_get_key
+        tp_key = _tp_get_key()
+        if tp_key:
+            return tp_key
+    except Exception:
+        pass
+
     key = os.environ.get("TOMTOM_API_KEY")
     if not key:
         try:
@@ -18,6 +26,40 @@ def _get_tomtom_key():
                 key = st.secrets["TOMTOM_API_KEY"]
         except Exception:
             pass
+
+    if not key:
+        try:
+            secrets_path = os.path.join(".streamlit", "secrets.toml")
+            if os.path.exists(secrets_path):
+                with open(secrets_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        if line.strip().startswith("TOMTOM_API_KEY"):
+                            parts = line.split("=", 1)
+                            if len(parts) == 2:
+                                key = parts[1].strip().strip('"').strip("'")
+                                break
+        except Exception:
+            pass
+
+    if not key:
+        try:
+            env_path = os.path.join(os.path.dirname(__file__), ".env")
+            if not os.path.exists(env_path):
+                env_path = ".env"
+            if os.path.exists(env_path):
+                with open(env_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line_s = line.strip()
+                        if line_s.startswith("TOMTOM_API_KEY"):
+                            parts = line_s.split("=", 1)
+                            if len(parts) == 2:
+                                candidate = parts[1].strip().strip('"').strip("'")
+                                if candidate and candidate != "your_tomtom_api_key_here":
+                                    key = candidate
+                                    break
+        except Exception:
+            pass
+
     return key
 
 @st.cache_data(ttl=3600)

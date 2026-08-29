@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2026-08-29T16:20:39.701708Z",
+    "lat": 26.9124,
+    "lon": 75.7873,
+    "source": "live_api",
+    "ratio": 1.0,
+    "confidence": 1.0
+  },
+  {
+    "timestamp": "2026-08-29T16:20:42.168136Z",
+    "lat": 26.9196,
+    "lon": 75.7878,
+    "source": "live_api",
+    "ratio": 1.0,
+    "confidence": 1.0
+  },
+  {
+    "timestamp": "2026-08-29T16:20:44.721836Z",
+    "lat": 26.9239,
+    "lon": 75.8267,
+    "source": "live_api",
+    "ratio": 0.8333333333333334,
+    "confidence": 0.945533
+  },
+  {
+    "timestamp": "2026-08-29T16:20:47.174814Z",
+    "lat": 26.9855,
+    "lon": 75.8513,
+    "source": "live_api",
+    "ratio": 0.8333333333333334,
+    "confidence": 0.945533
+  },
+  {
+    "timestamp": "2026-08-29T16:20:49.339924Z",
+    "lat": 26.853,
+    "lon": 75.7663,
+    "source": "live_api",
+    "ratio": 1.0,
+    "confidence": 1.0
+  }
+]

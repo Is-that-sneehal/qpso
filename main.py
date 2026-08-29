@@ -38,7 +38,7 @@ if go_btn:
             st.session_state.solver_status = "Running"
             
             # --- CALL QUANTUM SOLVER ---
-            routes_list, stats = logic.optimize_route_algo(
+            routes_list, stats = logic.optimize_route_qpso_traffic(
                 start_loc, 
                 st.session_state.stops_data, 
                 round_trip=is_round_trip,
@@ -47,39 +47,46 @@ if go_btn:
             )
             
             # --- SPLIT PATH PROCESSING ---
-            total_km = 0
-            total_min = 0
+            # NOTE: total_km / total_min come from the solver's traffic-adjusted
+            # matrices (stats['final_distance_km'] / stats['final_time_hours']).
+            # api.get_road_path() is called ONLY for road geometry (polyline).
+            solver_dist_km  = stats.get('final_distance_km')
+            solver_time_hrs = stats.get('final_time_hours')
+
             all_routes_geo = []
             all_markers = []
             all_coords = []
             vehicle_metrics = []
             any_fallback = False
-            
+            geo_total_km  = 0.0  # geometry-API fallback accumulator
+            geo_total_min = 0.0
+
             for v_idx, route_nodes in enumerate(routes_list):
-                # Get Geometry for this specific vehicle route
+                # Get road geometry only — distance/time from this call are NOT
+                # used for the dashboard badges (they ignore live traffic).
                 coords_seq = [n['coords'] for n in route_nodes]
                 path_res = api.get_road_path(coords_seq)
-                
+
                 if len(path_res) == 4:
-                    path_geo, km, mins, is_fallback = path_res
+                    path_geo, geo_km, geo_mins, is_fallback = path_res
                 else:
-                    path_geo, km, mins = path_res
+                    path_geo, geo_km, geo_mins = path_res
                     is_fallback = False
 
                 if is_fallback:
                     any_fallback = True
-                
-                total_km += km
-                total_min += mins
+
+                geo_total_km  += geo_km
+                geo_total_min += geo_mins
                 all_routes_geo.append({
                     "geo": path_geo if path_geo else coords_seq,
                     "is_fallback": is_fallback
                 })
-                
+
                 vehicle_metrics.append({
                     "id": v_idx + 1,
-                    "dist": km,
-                    "time": mins
+                    "dist": geo_km,
+                    "time": geo_mins
                 })
                 
                 # Collect Marker Data with Vehicle Info
@@ -98,9 +105,14 @@ if go_btn:
                 st.warning("⚠️ Live road routing service unavailable. Displaying approximate geodesic route lines.")
             
             # --- CALCULATE LOGISTICS METRICS ---
+            # Use traffic-adjusted distance/time from solver if available;
+            # fall back to geometry-API totals only if solver keys are missing.
+            total_km  = solver_dist_km  if solver_dist_km  is not None else geo_total_km
+            total_min = (solver_time_hrs * 60.0) if solver_time_hrs is not None else geo_total_min
+
             total_fuel = total_km / mileage
             total_cost = total_fuel * fuel_price
-            
+
             # --- UPDATE SESSION STATE ---
             st.session_state.route_metrics = {
                 "dist": total_km,

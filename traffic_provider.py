@@ -5,6 +5,8 @@ Provides non-blocking, cached, and rate-limited traffic-aware utilities for QPSO
 """
 import os
 import time
+import json
+from datetime import datetime, timezone
 from typing import Dict, Any, Tuple, List, Optional
 import requests
 import numpy as np
@@ -18,6 +20,11 @@ _RATE_LIMIT_MAX_CALLS = 40
 _RATE_LIMIT_WINDOW_SECONDS = 60.0
 _CALL_TIMESTAMPS: List[float] = []
 
+TOMTOM_API_KEY: Optional[str] = None
+
+# In-memory diagnostic audit log for truthful traffic source attribution
+_audit_log: List[Dict[str, Any]] = []
+
 _FALLBACK_TRAFFIC = {
     'current_speed_kmh': None,
     'free_flow_speed_kmh': None,
@@ -26,10 +33,98 @@ _FALLBACK_TRAFFIC = {
 }
 
 
+def _log_traffic_call(lat: Any, lon: Any, source: str, result: Dict[str, Any]) -> None:
+    """Safely append a diagnostic entry to _audit_log without ever raising."""
+    try:
+        try:
+            iso_ts = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        except Exception:
+            iso_ts = ""
+        
+        try:
+            lat_f = round(float(lat), 4)
+            lon_f = round(float(lon), 4)
+        except Exception:
+            lat_f, lon_f = 0.0, 0.0
+
+        _audit_log.append({
+            'timestamp': iso_ts,
+            'lat': lat_f,
+            'lon': lon_f,
+            'source': source,
+            'ratio': result.get('ratio', 1.0),
+            'confidence': result.get('confidence', 0.0)
+        })
+    except Exception:
+        pass
+
+
+def get_audit_log() -> List[Dict[str, Any]]:
+    """Returns a copy of _audit_log (list of dicts), most recent last."""
+    return [dict(entry) for entry in _audit_log]
+
+
+def get_audit_summary() -> Dict[str, Any]:
+    """
+    Returns a dict:
+    {
+      'total_calls': int,
+      'live_api_calls': int,
+      'cache_hits': int,
+      'fallback_calls': int,
+      'live_data_pct': float (live_api_calls / total_calls * 100, or 0 if total_calls is 0),
+      'first_call': timestamp or None,
+      'last_call': timestamp or None
+    }
+    Pure computation over _audit_log, no I/O.
+    """
+    total = len(_audit_log)
+    live_count = sum(1 for entry in _audit_log if entry.get('source') == 'live_api')
+    cache_count = sum(1 for entry in _audit_log if entry.get('source') == 'cache')
+    fallback_count = sum(1 for entry in _audit_log if entry.get('source') == 'fallback')
+    pct = (live_count / total * 100.0) if total > 0 else 0.0
+    first_ts = _audit_log[0].get('timestamp') if total > 0 else None
+    last_ts = _audit_log[-1].get('timestamp') if total > 0 else None
+
+    return {
+        'total_calls': total,
+        'live_api_calls': live_count,
+        'cache_hits': cache_count,
+        'fallback_calls': fallback_count,
+        'live_data_pct': pct,
+        'first_call': first_ts,
+        'last_call': last_ts
+    }
+
+
+def export_audit_log(output_path: str = 'traffic_audit_log.json') -> str:
+    """
+    Writes get_audit_log() as pretty JSON to output_path. Returns the path.
+    This file is your evidence artifact — a real, timestamped, honest record
+    of every traffic call made and where its data actually came from.
+    """
+    try:
+        log_data = get_audit_log()
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(log_data, f, indent=2)
+    except Exception:
+        pass
+    return output_path
+
+
+def clear_audit_log() -> None:
+    """Clears the in-memory audit log."""
+    global _audit_log
+    _audit_log.clear()
+
+
 def _get_tomtom_key() -> Optional[str]:
     """
     Retrieve TomTom API key from environment variable or optional config without importing streamlit.
     """
+    global TOMTOM_API_KEY
+    if TOMTOM_API_KEY:
+        return TOMTOM_API_KEY
     key = os.environ.get("TOMTOM_API_KEY")
     if not key:
         # Check config.py if present without mutating
@@ -51,6 +146,26 @@ def _get_tomtom_key() -> Optional[str]:
                             if len(parts) == 2:
                                 key = parts[1].strip().strip('"').strip("'")
                                 break
+        except Exception:
+            pass
+
+    # Check .env file if accessible
+    if not key:
+        try:
+            env_path = os.path.join(os.path.dirname(__file__), ".env")
+            if not os.path.exists(env_path):
+                env_path = ".env"
+            if os.path.exists(env_path):
+                with open(env_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line_s = line.strip()
+                        if line_s.startswith("TOMTOM_API_KEY"):
+                            parts = line_s.split("=", 1)
+                            if len(parts) == 2:
+                                candidate = parts[1].strip().strip('"').strip("'")
+                                if candidate and candidate != "your_tomtom_api_key_here":
+                                    key = candidate
+                                    break
         except Exception:
             pass
             
@@ -91,7 +206,9 @@ def get_traffic_flow(lat: float, lon: float) -> Dict[str, Any]:
         lat_rounded = round(float(lat), 3)
         lon_rounded = round(float(lon), 3)
     except (ValueError, TypeError):
-        return dict(_FALLBACK_TRAFFIC)
+        fallback_res = dict(_FALLBACK_TRAFFIC)
+        _log_traffic_call(lat, lon, 'fallback', fallback_res)
+        return fallback_res
 
     cache_key = (lat_rounded, lon_rounded)
     now = time.time()
@@ -100,17 +217,23 @@ def get_traffic_flow(lat: float, lon: float) -> Dict[str, Any]:
     if cache_key in _TRAFFIC_CACHE:
         ts, cached_val = _TRAFFIC_CACHE[cache_key]
         if now - ts < _CACHE_TTL_SECONDS:
-            return dict(cached_val)
+            cached_res = dict(cached_val)
+            _log_traffic_call(lat, lon, 'cache', cached_res)
+            return cached_res
 
     # Check API key
     api_key = _get_tomtom_key()
     if not api_key:
-        return dict(_FALLBACK_TRAFFIC)
+        fallback_res = dict(_FALLBACK_TRAFFIC)
+        _log_traffic_call(lat, lon, 'fallback', fallback_res)
+        return fallback_res
 
     # Check rate limit
     if not _check_rate_limit(now):
         # Rate limit reached; return fallback without blocking/sleeping
-        return dict(_FALLBACK_TRAFFIC)
+        fallback_res = dict(_FALLBACK_TRAFFIC)
+        _log_traffic_call(lat, lon, 'fallback', fallback_res)
+        return fallback_res
 
     # Record API call timestamp
     _CALL_TIMESTAMPS.append(now)
@@ -124,11 +247,11 @@ def get_traffic_flow(lat: float, lon: float) -> Dict[str, Any]:
     try:
         response = requests.get(url, params=params, timeout=3.0)
         if response.status_code == 200:
-            data = response.json()
-            flow_data = data.get("flowSegmentData", {})
-            current_speed = flow_data.get("currentSpeed")
-            free_flow_speed = flow_data.get("freeFlowSpeed")
-            confidence = float(flow_data.get("confidence", 0.5))
+            data = response.json().get("flowSegmentData", {})
+            current_speed = data.get("currentSpeed")
+            free_flow_speed = data.get("freeFlowSpeed")
+            conf_val = data.get("confidence")
+            confidence = float(conf_val) if conf_val is not None else 0.5
 
             if current_speed is not None and free_flow_speed is not None and float(free_flow_speed) > 0:
                 curr_spd = float(current_speed)
@@ -142,11 +265,14 @@ def get_traffic_flow(lat: float, lon: float) -> Dict[str, Any]:
                     'confidence': confidence
                 }
                 _TRAFFIC_CACHE[cache_key] = (now, result)
+                _log_traffic_call(lat, lon, 'live_api', result)
                 return result
     except Exception:
         pass
 
-    return dict(_FALLBACK_TRAFFIC)
+    fallback_res = dict(_FALLBACK_TRAFFIC)
+    _log_traffic_call(lat, lon, 'fallback', fallback_res)
+    return fallback_res
 
 
 def edge_midpoint(from_coords: Tuple[float, float], to_coords: Tuple[float, float]) -> Tuple[float, float]:

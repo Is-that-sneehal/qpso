@@ -166,6 +166,9 @@ def solve_qpso_vrp(
             "traffic_segments": [] if (use_traffic and _TRAFFIC_AVAILABLE) else None
         }
 
+    total_final_dist = 0.0
+    total_final_time = 0.0
+
     # Handle Multi-Vehicle via Clustering
     if n_vehicles > 1 and len(stops_data) > 1:
         k = min(n_vehicles, len(stops_data))
@@ -199,6 +202,14 @@ def solve_qpso_vrp(
             total_temp += sub_stats.get("final_temp", 0.0)
             combined_history.extend(sub_stats.get("history", []))
 
+            sub_map = {id(n): idx for idx, n in enumerate(sub_nodes)}
+            for k_idx in range(len(sub_route) - 1):
+                u = sub_map.get(id(sub_route[k_idx]))
+                v = sub_map.get(id(sub_route[k_idx + 1]))
+                if u is not None and v is not None:
+                    total_final_dist += float(dist_matrix_km[u, v])
+                    total_final_time += float(time_matrix_hours[u, v])
+
         stats: Dict[str, Any] = {
             "history": combined_history,
             "tunnels": total_tunnels,
@@ -206,7 +217,9 @@ def solve_qpso_vrp(
             "algorithm": "QPSO-VRP (Delta Potential Well)",
             "convergence_rate": float(
                 (combined_history[0] - combined_history[-1]) / max(combined_history[0], 1e-6)
-            ) if combined_history else 0.0
+            ) if combined_history else 0.0,
+            "final_distance_km": round(float(total_final_dist), 2),
+            "final_time_hours": round(float(total_final_time), 4)
         }
     else:
         # Single Vehicle Route
@@ -220,6 +233,17 @@ def solve_qpso_vrp(
 
         best_nodes, stats = _run_qpso_single(nodes, dist_matrix_km, time_matrix_hours, q_params=q_params)
         routes = [best_nodes]
+
+        node_map = {id(n): idx for idx, n in enumerate(nodes)}
+        for k_idx in range(len(best_nodes) - 1):
+            u = node_map.get(id(best_nodes[k_idx]))
+            v = node_map.get(id(best_nodes[k_idx + 1]))
+            if u is not None and v is not None:
+                total_final_dist += float(dist_matrix_km[u, v])
+                total_final_time += float(time_matrix_hours[u, v])
+
+        stats["final_distance_km"] = round(float(total_final_dist), 2)
+        stats["final_time_hours"] = round(float(total_final_time), 4)
 
     # Annotate traffic segments if live traffic requested and available
     if q_params and q_params.get('use_live_traffic') and _TRAFFIC_AVAILABLE:
