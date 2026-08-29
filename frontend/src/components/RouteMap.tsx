@@ -13,7 +13,7 @@ L.Icon.Default.mergeOptions({
 
 // Custom Frosted SVG Circle Marker Icons
 const createCustomMarker = (text: string, isStart: boolean = false, isLast: boolean = false, color: string = '#ff5719') => {
-  const bg = isStart ? '#ff5719' : isLast ? '#3c95e4' : '#110b1b';
+  const bg = isStart ? '#ff5719' : isLast ? '#3c95e4' : getComputedStyle(document.documentElement).getPropertyValue('--color-bg-quaternary').trim() || '#221d2d';
   const border = color;
   return L.divIcon({
     className: 'custom-leaflet-marker',
@@ -84,7 +84,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
   const vehicleColors = ['#ff5719', '#9dcaff', '#d0bcff', '#6000e3'];
 
   return (
-    <div style={{ height, width: '100%' }} className="rounded-xl overflow-hidden border border-[#5c4037] relative z-0">
+    <div style={{ height, width: '100%', border: '1px solid var(--color-border)' }} className="rounded-xl overflow-hidden relative z-0">
       <MapContainer
         center={center}
         zoom={12}
@@ -106,7 +106,7 @@ export const RouteMap: React.FC<RouteMapProps> = ({
           <Popup>
             <div className="text-xs font-sans p-1">
               <strong className="text-[#ff5719]">Origin Hub:</strong>
-              <div className="text-[#e9def5] mt-0.5">{startLocation.name}</div>
+              <div style={{ color: 'var(--color-text-primary)' }} className="mt-0.5">{startLocation.name}</div>
             </div>
           </Popup>
         </Marker>
@@ -138,8 +138,8 @@ export const RouteMap: React.FC<RouteMapProps> = ({
                   >
                     <Popup>
                       <div className="text-xs font-sans p-1">
-                        <div className="font-bold text-[#e9def5]">Vehicle {vRoute.vehicle_id} - Stop {sIdx}</div>
-                        <div className="text-[#e6beb2]">{stop.name}</div>
+                        <div className="font-bold" style={{ color: 'var(--color-text-primary)' }}>Vehicle {vRoute.vehicle_id} - Stop {sIdx}</div>
+                        <div style={{ color: 'var(--color-text-muted)' }}>{stop.name}</div>
                       </div>
                     </Popup>
                   </Marker>

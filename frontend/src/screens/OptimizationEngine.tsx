@@ -57,8 +57,8 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
       {/* Centered Header */}
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <div className="w-12 h-1 bg-[#ff5719] mx-auto rounded-full"></div>
-        <h1 className="text-3xl md:text-4xl font-light text-[#e9def5]">Metaheuristic Engine Tuning</h1>
-        <p className="text-sm text-[#e6beb2]/80 leading-relaxed">
+        <h1 className="text-3xl md:text-4xl font-light text-[var(--color-text-primary)]">Metaheuristic Engine Tuning</h1>
+        <p className="text-sm text-[var(--color-text-muted)]/80 leading-relaxed">
           Configure advanced algorithmic parameters to optimize routing throughput and resolve critical network congestion.
         </p>
       </div>
@@ -71,7 +71,7 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
           
           {/* Card 1: Algorithm Hyperparameters */}
           <div className="quantum-glow-card p-6 rounded-2xl space-y-4">
-            <div className="flex items-center gap-2 text-base font-medium text-[#e9def5] border-b border-[#5c4037]/30 pb-3">
+            <div className="flex items-center gap-2 text-base font-medium text-[var(--color-text-primary)] border-b border-[var(--color-border)]/30 pb-3">
               <Sliders className="w-4 h-4 text-[#ff5719]" />
               <span>🌱 Algorithm Hyperparameters</span>
             </div>
@@ -123,7 +123,7 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
 
           {/* Card 2: Hardware Allocation */}
           <div className="quantum-glow-card p-6 rounded-2xl space-y-4">
-            <div className="flex items-center gap-2 text-base font-medium text-[#e9def5] border-b border-[#5c4037]/30 pb-3">
+            <div className="flex items-center gap-2 text-base font-medium text-[var(--color-text-primary)] border-b border-[var(--color-border)]/30 pb-3">
               <Cpu className="w-4 h-4 text-[#9dcaff]" />
               <span>⚙ Hardware Allocation</span>
             </div>
@@ -135,7 +135,7 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
                   type="number"
                   value={tpuAlloc}
                   onChange={(e) => setTpuAlloc(parseInt(e.target.value))}
-                  className="w-full bg-[#110b1b] border border-[#5c4037] rounded-lg px-3 py-2 text-sm text-[#e9def5] focus:outline-none focus:border-[#9dcaff]"
+                  className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[#9dcaff]"
                 />
               </div>
 
@@ -145,7 +145,7 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
                   type="number"
                   value={memAlloc}
                   onChange={(e) => setMemAlloc(parseInt(e.target.value))}
-                  className="w-full bg-[#110b1b] border border-[#5c4037] rounded-lg px-3 py-2 text-sm text-[#e9def5] focus:outline-none focus:border-[#9dcaff]"
+                  className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-sm text-[var(--color-text-primary)] focus:outline-none focus:border-[#9dcaff]"
                 />
               </div>
             </div>
@@ -161,28 +161,28 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
             <div className="text-xs font-mono text-[#ffb59e] uppercase tracking-wider">OPTIMIZATION PIPELINE</div>
             
             {/* Minimal Node & S-curve SVG Diagram */}
-            <div className="h-44 bg-[#110b1b] border border-[#5c4037]/50 rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
+            <div className="h-44 bg-[var(--color-bg-primary)] border border-[var(--color-border)]/50 rounded-xl p-4 flex items-center justify-between relative overflow-hidden">
               <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
                 <path d="M 40 80 C 120 20, 200 140, 280 80" stroke="#ff5719" strokeWidth="2" fill="none" strokeDasharray="4 4" />
                 <path d="M 280 80 C 340 40, 400 100, 460 80" stroke="#9dcaff" strokeWidth="2" fill="none" />
               </svg>
               <div className="relative z-10 text-center">
                 <div className="w-10 h-10 rounded-full bg-[#ff5719]/20 border border-[#ff5719] mx-auto flex items-center justify-center text-xs font-mono text-[#ffb59e]">1</div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/70 mt-1">OSM Graph</div>
+                <div className="text-[10px] font-mono text-[var(--color-text-muted)]/70 mt-1">OSM Graph</div>
               </div>
               <div className="relative z-10 text-center">
                 <div className="w-10 h-10 rounded-full bg-[#9dcaff]/20 border border-[#9dcaff] mx-auto flex items-center justify-center text-xs font-mono text-[#9dcaff]">2</div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/70 mt-1">N×N Matrix</div>
+                <div className="text-[10px] font-mono text-[var(--color-text-muted)]/70 mt-1">N×N Matrix</div>
               </div>
               <div className="relative z-10 text-center">
                 <div className="w-10 h-10 rounded-full bg-[#d0bcff]/20 border border-[#d0bcff] mx-auto flex items-center justify-center text-xs font-mono text-[#d0bcff]">3</div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/70 mt-1">QPSO Engine</div>
+                <div className="text-[10px] font-mono text-[var(--color-text-muted)]/70 mt-1">QPSO Engine</div>
               </div>
             </div>
           </div>
 
           {/* Card 2: Engine Status */}
-          <div className="bg-[#110b1b] border-l-4 border-l-[#ff5719] border border-[#5c4037] p-5 rounded-xl space-y-3">
+          <div className="bg-[var(--color-bg-primary)] border-l-4 border-l-[#ff5719] border border-[var(--color-border)] p-5 rounded-xl space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono text-[#ffb59e] uppercase">ENGINE STATUS</span>
               <span className="flex items-center gap-1.5 text-xs text-[#9dcaff]">
@@ -190,8 +190,8 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
                 <span>Ready</span>
               </span>
             </div>
-            <p className="text-sm font-medium text-[#e9def5]">QPSO Delta-Potential Well Active & Calibrated</p>
-            <div className="text-[11px] font-mono text-[#e6beb2]/60 pt-2 border-t border-[#5c4037]/30">
+            <p className="text-sm font-medium text-[var(--color-text-primary)]">QPSO Delta-Potential Well Active & Calibrated</p>
+            <div className="text-[11px] font-mono text-[var(--color-text-muted)]/60 pt-2 border-t border-[var(--color-border)]/30">
               Last Run: {new Date().toLocaleTimeString()}
             </div>
           </div>
@@ -212,14 +212,14 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
 
       {/* Benchmark Comparison Table (Section 8) */}
       <div className="quantum-glow-card p-6 rounded-2xl space-y-6">
-        <div className="flex items-center justify-between border-b border-[#5c4037]/30 pb-4">
+        <div className="flex items-center justify-between border-b border-[var(--color-border)]/30 pb-4">
           <div>
-            <h2 className="text-xl font-normal text-[#e9def5]">Algorithmic Benchmark Comparison</h2>
-            <p className="text-xs text-[#e6beb2]/70">QPSO vs Simulated Annealing vs Classical PSO vs Held-Karp Exact DP</p>
+            <h2 className="text-xl font-normal text-[var(--color-text-primary)]">Algorithmic Benchmark Comparison</h2>
+            <p className="text-xs text-[var(--color-text-muted)]/70">QPSO vs Simulated Annealing vs Classical PSO vs Held-Karp Exact DP</p>
           </div>
           <button
             onClick={handleSaveAndDeploy}
-            className="px-4 py-2 bg-[#110b1b] border border-[#5c4037] rounded-lg text-xs font-mono text-[#ffb59e] hover:bg-[#221d2d] transition"
+            className="px-4 py-2 bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg text-xs font-mono text-[#ffb59e] hover:bg-[var(--color-bg-quaternary)] transition"
           >
             Re-run Benchmark
           </button>
@@ -233,7 +233,7 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono border-collapse">
               <thead>
-                <tr className="border-b border-[#5c4037]/50 text-[#ffb59e] uppercase">
+                <tr className="border-b border-[var(--color-border)]/50 text-[#ffb59e] uppercase">
                   <th className="py-3 px-4">Algorithm</th>
                   <th className="py-3 px-4">Type</th>
                   <th className="py-3 px-4">Route Cost</th>
@@ -242,17 +242,17 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
                   <th className="py-3 px-4">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#5c4037]/20">
+              <tbody className="divide-y divide-[var(--color-border)]/20">
                 {benchmarks.map((row, idx) => (
                   <tr key={idx} className={row.algorithm.includes('QPSO') ? 'bg-[#ff5719]/10' : ''}>
-                    <td className="py-3 px-4 font-bold text-[#e9def5]">{row.algorithm}</td>
-                    <td className="py-3 px-4 text-[#e6beb2]/70">{row.type}</td>
+                    <td className="py-3 px-4 font-bold text-[var(--color-text-primary)]">{row.algorithm}</td>
+                    <td className="py-3 px-4 text-[var(--color-text-muted)]/70">{row.type}</td>
                     <td className="py-3 px-4 text-[#9dcaff] font-bold">{row.route_cost}</td>
-                    <td className="py-3 px-4 text-[#e9def5]">{row.execution_ms} ms</td>
+                    <td className="py-3 px-4 text-[var(--color-text-primary)]">{row.execution_ms} ms</td>
                     <td className="py-3 px-4 text-[#ffb59e]">{row.optimality_gap_percent}%</td>
                     <td className="py-3 px-4">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                        row.status.includes('BEST') ? 'bg-[#ff5719] text-white' : 'bg-[#110b1b] text-[#e6beb2]/60'
+                        row.status.includes('BEST') ? 'bg-[#ff5719] text-white' : 'bg-[var(--color-bg-primary)] text-[var(--color-text-muted)]/60'
                       }`}>
                         {row.status}
                       </span>
@@ -263,7 +263,7 @@ export const OptimizationEngine: React.FC<EngineProps> = ({
             </table>
           </div>
         ) : (
-          <div className="text-center py-8 text-xs font-mono text-[#e6beb2]/60">
+          <div className="text-center py-8 text-xs font-mono text-[var(--color-text-muted)]/60">
             Click "Save & Deploy Engine" above to run live comparative benchmark suite across all 4 algorithms.
           </div>
         )}

@@ -1,6 +1,52 @@
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700,800&display=swap');
 @import "tailwindcss";
 
+:root,
+[data-theme='dark'] {
+  --color-bg-primary: #110b1b;
+  --color-bg-secondary: #1a1420;
+  --color-bg-tertiary: #1e1929;
+  --color-bg-quaternary: #221d2d;
+  --color-bg-hover: #251f33;
+  --color-text-primary: #f4f1e8;
+  --color-text-secondary: #e9def5;
+  --color-text-muted: #e6beb2;
+  --color-text-muted-alt: rgba(230, 190, 178, 0.85);
+  --color-accent: #ff5719;
+  --color-accent-soft: #ffb59e;
+  --color-blue-accent: #9dcaff;
+  --color-purple-accent: #d0bcff;
+  --color-border: #5c4037;
+  --color-success: #44ff88;
+  --color-danger: #ff4444;
+  --color-danger-soft: #ff6666;
+  /* Dark mode uses existing glow classes — shadow vars are no-ops */
+  --shadow-card: 0 0 0 rgba(0,0,0,0);
+  --shadow-card-hover: 0 0 0 rgba(0,0,0,0);
+}
+
+[data-theme='light'] {
+  --color-bg-primary: #f6f4ef;       /* page background - warm off-white */
+  --color-bg-secondary: #ffffff;      /* raised cards - pure white for contrast */
+  --color-bg-tertiary: #efeae1;       /* nested/inset surfaces */
+  --color-bg-quaternary: #e6dfd2;     /* selected/active surfaces */
+  --color-bg-hover: #ddd4c3;          /* hover states */
+  --color-text-primary: #1c1626;      /* near-black plum, matches brand warmth */
+  --color-text-secondary: #2e2438;
+  --color-text-muted: #6b5850;
+  --color-text-muted-alt: rgba(107, 88, 80, 0.85);
+  --color-accent: #ff5719;
+  --color-accent-soft: #d9490f;       /* darker orange for AA contrast on white */
+  --color-blue-accent: #1d5fb8;       /* darkened for readability on light bg */
+  --color-purple-accent: #6b46c1;     /* darkened for readability on light bg */
+  --color-border: #ddd3c2;
+  --color-success: #15803d;
+  --color-danger: #dc2626;
+  --color-danger-soft: #ef4444;
+  --shadow-card: 0 1px 3px rgba(28, 22, 38, 0.06), 0 4px 12px rgba(28, 22, 38, 0.04);
+  --shadow-card-hover: 0 2px 6px rgba(28, 22, 38, 0.08), 0 8px 20px rgba(28, 22, 38, 0.06);
+}
+
 @theme {
   --font-display: 'Clash Display', 'Inter', sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -35,8 +81,9 @@
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-on-surface);
+    background-color: var(--color-bg-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: var(--color-text-primary);
     font-family: var(--font-sans);
     margin: 0;
     padding: 0;
@@ -58,7 +105,7 @@
   line-height: 1.15 !important;
   letter-spacing: 0.02em !important;
   word-spacing: 0.12em !important;
-  color: #f4f1e8;
+  color: var(--color-text-primary);
 }
 
 /* 2. Grotesque Sans Class - Functional UI & Body (Inter) */
@@ -110,10 +157,25 @@
 
 /* Quantum Glow Card */
 .quantum-glow-card {
-  background-color: #1e1929;
-  border: 1px solid var(--color-outline-variant);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(11, 11, 11, 0.8);
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(11, 11, 11, 0.8), var(--shadow-card);
   position: relative;
+  transition: box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+.quantum-glow-card:hover {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(11, 11, 11, 0.8), var(--shadow-card-hover);
+}
+
+/* Light-mode override: remove dark glow, show clean elevation */
+[data-theme='light'] .quantum-glow-card {
+  background-color: var(--color-bg-secondary);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme='light'] .quantum-glow-card:hover {
+  box-shadow: var(--shadow-card-hover);
 }
 
 .quantum-glow-card::after {
@@ -129,17 +191,17 @@
 
 /* Leaflet dark map fixes */
 .leaflet-container {
-  background-color: #111111 !important;
+  background-color: var(--color-bg-primary) !important;
   font-family: inherit;
 }
 .leaflet-popup-content-wrapper {
-  background: #1e1929 !important;
-  color: #f4f1e8 !important;
-  border: 1px solid #5c4037 !important;
+  background: var(--color-bg-tertiary) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
   border-radius: 8px !important;
 }
 .leaflet-popup-tip {
-  background: #1e1929 !important;
+  background: var(--color-bg-tertiary) !important;
 }
 
 /* Map Dark Theme Tile Filter */

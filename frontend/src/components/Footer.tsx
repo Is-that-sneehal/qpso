@@ -8,25 +8,25 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenReport }) => {
   return (
-    <footer className="bg-[#110b1b] border-t border-[#5c4037]/30 text-[#e6beb2] pt-10 pb-8 px-6 mt-16">
+    <footer className="bg-[var(--color-bg-primary)] border-t border-[var(--color-border)]/30 text-[var(--color-text-muted)] pt-10 pb-8 px-6 mt-16">
       <div className="max-w-[1440px] mx-auto space-y-8">
         
         {/* Simple 2-column layout: Our Team & Documentation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-[#5c4037]/20 text-xs">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-[var(--color-border)]/20 text-xs">
           
           {/* Column 1: Our Team */}
-          <div className="bg-[#1e1929]/60 border border-[#5c4037]/40 rounded-xl p-5 space-y-3">
+          <div className="bg-[var(--color-bg-tertiary)]/60 border border-[var(--color-border)]/40 rounded-xl p-5 space-y-3">
             <div className="flex items-center gap-2 font-semibold text-[#ffb59e] uppercase tracking-wider text-xs font-mono">
               <Users className="w-4 h-4 text-[#ff5719]" />
               <span>Our Team</span>
             </div>
-            <p className="text-xs text-[#e6beb2]/80 leading-relaxed font-mono">
+            <p className="text-xs text-[var(--color-text-muted)]/80 leading-relaxed font-mono">
               Designed & Developed by the Quantum Route Optimization Engineering Team. Specializing in Delta-Potential Particle Swarm Optimization, Real-Time Telemetry & Traffic Graph Routing.
             </p>
           </div>
 
           {/* Column 2: Documentation */}
-          <div className="bg-[#1e1929]/60 border border-[#5c4037]/40 rounded-xl p-5 space-y-3">
+          <div className="bg-[var(--color-bg-tertiary)]/60 border border-[var(--color-border)]/40 rounded-xl p-5 space-y-3">
             <div className="flex items-center gap-2 font-semibold text-[#ffb59e] uppercase tracking-wider text-xs font-mono">
               <FileText className="w-4 h-4 text-[#9dcaff]" />
               <span>Documentation</span>
@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenReport }) => 
         </div>
 
         {/* Copyright */}
-        <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-[#e6beb2]/60 font-mono gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--color-text-muted)]/60 font-mono gap-4">
           <p>© 2026 Quantum Route Optimization Platform. All rights reserved.</p>
           <div className="text-[11px] text-[#ffb59e]">
             Powered by Quantum-Behaved Swarm Engine

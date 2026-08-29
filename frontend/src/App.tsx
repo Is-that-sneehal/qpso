@@ -44,7 +44,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#161120] text-[#e9def5] flex flex-col justify-between">
+    <div className="min-h-screen flex flex-col justify-between" style={{ backgroundColor: 'var(--color-bg-primary)', color: 'var(--color-text-primary)' }}>
       <div>
         <Navbar
           currentTab={currentTab}

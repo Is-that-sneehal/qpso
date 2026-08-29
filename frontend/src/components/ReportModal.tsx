@@ -73,29 +73,29 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="bg-[#161120] border border-[#5c4037] rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200" style={{ backgroundColor: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
         
-        {/* Header Bar */}
-        <div className="bg-[#1e1929] border-b border-[#5c4037]/50 px-6 py-4 flex items-center justify-between">
+        <div className="px-6 py-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-tertiary)', borderBottom: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)' }}>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-[#ff5719]/15 border border-[#ff5719]/30 text-[#ff5719]">
+            <div className="p-2 rounded-xl" style={{ backgroundColor: 'color-mix(in srgb, var(--color-accent) 15%, transparent)', border: '1px solid color-mix(in srgb, var(--color-accent) 30%, transparent)', color: 'var(--color-accent)' }}>
               <FileText className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-[#e9def5]">Fleet Optimization Audit Report</h2>
-                <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-[#ff5719]/20 text-[#ffb59e] border border-[#ff5719]/40">
+                <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary)' }}>Fleet Optimization Audit Report</h2>
+                <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded" style={{ backgroundColor: 'color-mix(in srgb, var(--color-accent) 20%, transparent)', color: 'var(--color-accent-soft)', border: '1px solid color-mix(in srgb, var(--color-accent) 40%, transparent)' }}>
                   {activeRunId}
                 </span>
               </div>
-              <p className="text-xs text-[#e6beb2]/70">Quantum-Behaved Particle Swarm Route Evaluation Summary</p>
+              <p className="text-xs" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 70%, transparent)' }}>Quantum-Behaved Particle Swarm Route Evaluation Summary</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="p-2 rounded-lg text-[#e6beb2]/60 hover:text-[#e9def5] hover:bg-[#221d2d] transition"
+              className="p-2 rounded-lg transition"
+              style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}
               title="Close modal"
             >
               <X className="w-5 h-5" />
@@ -104,19 +104,18 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         </div>
 
         {/* Toolbar Bar: Use Case Selector & Download Buttons */}
-        <div className="bg-[#110b1b] border-b border-[#5c4037]/30 px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-6 py-3 flex flex-wrap items-center justify-between gap-3" style={{ backgroundColor: 'var(--color-bg-primary)', borderBottom: '1px solid color-mix(in srgb, var(--color-border) 30%, transparent)' }}>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-[#e6beb2]/60 uppercase">Domain:</span>
-            <div className="flex rounded-lg bg-[#1e1929] p-0.5 border border-[#5c4037]/40 text-xs">
+            <span className="text-xs font-mono uppercase" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}>Domain:</span>
+            <div className="flex rounded-lg p-0.5 text-xs" style={{ backgroundColor: 'var(--color-bg-tertiary)', border: '1px solid color-mix(in srgb, var(--color-border) 40%, transparent)' }}>
               {(['generic', 'delivery', 'emergency'] as const).map((uc) => (
                 <button
                   key={uc}
                   onClick={() => setUseCase(uc)}
                   className={`px-3 py-1 rounded-md font-mono transition capitalize ${
-                    useCase === uc
-                      ? 'bg-[#ff5719] text-white font-semibold shadow-sm'
-                      : 'text-[#e6beb2]/70 hover:text-[#e9def5]'
+                    useCase === uc ? 'bg-[#ff5719] text-white font-semibold shadow-sm' : ''
                   }`}
+                  style={useCase !== uc ? { color: 'color-mix(in srgb, var(--color-text-muted) 70%, transparent)' } : {}}
                 >
                   {uc}
                 </button>
@@ -141,7 +140,8 @@ export const ReportModal: React.FC<ReportModalProps> = ({
               target="_blank"
               rel="noreferrer"
               download={`route_report_${activeRunId}.json`}
-              className="px-3.5 py-1.5 rounded-lg border border-[#5c4037] text-xs font-mono text-[#9dcaff] hover:bg-[#1e1929] transition flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition"
+              style={{ border: '1px solid var(--color-border)', color: 'var(--color-blue-accent)' }}
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export JSON</span>
@@ -149,7 +149,8 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
             <button
               onClick={handlePrint}
-              className="p-1.5 rounded-lg border border-[#5c4037] text-[#e6beb2]/70 hover:text-[#e9def5] hover:bg-[#1e1929] transition"
+              className="p-1.5 rounded-lg transition"
+              style={{ border: '1px solid var(--color-border)', color: 'color-mix(in srgb, var(--color-text-muted) 70%, transparent)' }}
               title="Print document"
             >
               <Printer className="w-4 h-4" />
@@ -158,59 +159,59 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         </div>
 
         {/* Scrollable Report Content */}
-        <div className="p-6 overflow-y-auto space-y-6 text-[#e9def5]">
+        <div className="p-6 overflow-y-auto space-y-6" style={{ color: 'var(--color-text-primary)' }}>
 
           {/* Section 1: Executive KPI Overview */}
           <div>
-            <h3 className="text-xs font-mono text-[#ffb59e] uppercase tracking-wider mb-3">1. Executive Optimization Summary</h3>
+              <h3 className="text-xs font-mono uppercase tracking-wider mb-3" style={{ color: 'var(--color-accent-soft)' }}>1. Executive Optimization Summary</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               
-              <div className="bg-[#1e1929] border border-[#5c4037]/50 p-3.5 rounded-xl space-y-1">
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#e6beb2]/60">
+              <div className="p-3.5 rounded-xl space-y-1" style={{ backgroundColor: 'var(--color-bg-tertiary)', border: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)' }}>
+                <div className="flex items-center justify-between text-[11px] font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}>
                   <span>Total Distance</span>
-                  <Truck className="w-3.5 h-3.5 text-[#ff5719]" />
+                  <Truck className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
                 </div>
-                <div className="text-xl font-bold text-[#e9def5]">
+                <div className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
                   {reportData?.summary?.total_distance_km ?? metrics.total_distance_km ?? 0} km
                 </div>
-                <div className="text-[10px] text-[#ffb59e] font-mono">Multi-vehicle path</div>
+                <div className="text-[10px] font-mono" style={{ color: 'var(--color-accent-soft)' }}>Multi-vehicle path</div>
               </div>
 
-              <div className="bg-[#1e1929] border border-[#5c4037]/50 p-3.5 rounded-xl space-y-1">
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#e6beb2]/60">
+              <div className="p-3.5 rounded-xl space-y-1" style={{ backgroundColor: 'var(--color-bg-tertiary)', border: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)' }}>
+                <div className="flex items-center justify-between text-[11px] font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}>
                   <span>Transit Duration</span>
-                  <Clock className="w-3.5 h-3.5 text-[#ff5719]" />
+                  <Clock className="w-3.5 h-3.5" style={{ color: 'var(--color-accent)' }} />
                 </div>
-                <div className="text-xl font-bold text-[#e9def5]">
-                  {reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0} min ({( (reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0) / 60 ).toFixed(1)} hrs)
+                <div className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                  {reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0} min ({ ( (reportData?.summary?.total_time_minutes ?? metrics.total_time_min ?? 0) / 60 ).toFixed(1)} hrs)
                 </div>
-                <div className="text-[10px] text-[#e6beb2]/60 font-mono">
+                <div className="text-[10px] font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}>
                   Saved {metrics.time_saved_hrs || 2.4} hrs
                 </div>
               </div>
 
-              <div className="bg-[#1e1929] border border-[#5c4037]/50 p-3.5 rounded-xl space-y-1">
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#e6beb2]/60">
+              <div className="p-3.5 rounded-xl space-y-1" style={{ backgroundColor: 'var(--color-bg-tertiary)', border: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)' }}>
+                <div className="flex items-center justify-between text-[11px] font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}>
                   <span>Est. Fuel & Cost</span>
-                  <TrendingDown className="w-3.5 h-3.5 text-[#9dcaff]" />
+                  <TrendingDown className="w-3.5 h-3.5" style={{ color: 'var(--color-blue-accent)' }} />
                 </div>
-                <div className="text-xl font-bold text-[#e9def5]">
+                <div className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
                   ₹{reportData?.summary?.estimated_fuel_cost_inr ?? metrics.cost_inr ?? 0}
                 </div>
-                <div className="text-[10px] text-[#9dcaff] font-mono">
+                <div className="text-[10px] font-mono" style={{ color: 'var(--color-blue-accent)' }}>
                   ~{metrics.fuel_liters || 0} L fuel
                 </div>
               </div>
 
-              <div className="bg-[#1e1929] border border-[#5c4037]/50 p-3.5 rounded-xl space-y-1">
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#e6beb2]/60">
+              <div className="p-3.5 rounded-xl space-y-1" style={{ backgroundColor: 'var(--color-bg-tertiary)', border: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)' }}>
+                <div className="flex items-center justify-between text-[11px] font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)' }}>
                   <span>Carbon Offset</span>
                   <Leaf className="w-3.5 h-3.5 text-[#a8e6cf]" />
                 </div>
                 <div className="text-xl font-bold text-[#a8e6cf]">
                   {metrics.co2_reduction_kg ?? 18.5} kg
                 </div>
-                <div className="text-[10px] text-[#a8e6cf]/70 font-mono">CO2 reduction</div>
+                <div className="text-[10px] font-mono text-[#a8e6cf]/70">CO2 reduction</div>
               </div>
 
             </div>
@@ -218,24 +219,24 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
           {/* Section 2: Algorithmic & Solver Telemetry */}
           <div>
-            <h3 className="text-xs font-mono text-[#ffb59e] uppercase tracking-wider mb-3">2. Algorithmic Convergence & Telemetry</h3>
-            <div className="bg-[#110b1b] border border-[#5c4037]/40 rounded-xl p-4 space-y-3">
+            <h3 className="text-xs font-mono uppercase tracking-wider mb-3" style={{ color: 'var(--color-accent-soft)' }}>2. Algorithmic Convergence & Telemetry</h3>
+            <div className="rounded-xl p-4 space-y-3" style={{ backgroundColor: 'var(--color-bg-primary)', border: '1px solid color-mix(in srgb, var(--color-border) 40%, transparent)' }}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
                 <div>
-                  <span className="text-[#e6beb2]/50 block">Optimizer Engine</span>
-                  <span className="font-semibold text-[#e9def5]">QPSO v2 (Delta-Potential)</span>
+                  <span className="block" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 50%, transparent)' }}>Optimizer Engine</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>QPSO v2 (Delta-Potential)</span>
                 </div>
                 <div>
-                  <span className="text-[#e6beb2]/50 block">Computation Latency</span>
-                  <span className="font-semibold text-[#9dcaff]">{telemetry.execution_ms || 12} ms</span>
+                  <span className="block" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 50%, transparent)' }}>Computation Latency</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-blue-accent)' }}>{telemetry.execution_ms || 12} ms</span>
                 </div>
                 <div>
-                  <span className="text-[#e6beb2]/50 block">Quantum Tunnelings</span>
-                  <span className="font-semibold text-[#ff5719]">{telemetry.tunnels || 0} transitions</span>
+                  <span className="block" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 50%, transparent)' }}>Quantum Tunnelings</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-accent)' }}>{telemetry.tunnels || 0} transitions</span>
                 </div>
                 <div>
-                  <span className="text-[#e6beb2]/50 block">Iterations Run</span>
-                  <span className="font-semibold text-[#e9def5]">{telemetry.iterations || 300} cycles</span>
+                  <span className="block" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 50%, transparent)' }}>Iterations Run</span>
+                  <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{telemetry.iterations || 300} cycles</span>
                 </div>
               </div>
             </div>
@@ -243,38 +244,38 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
           {/* Section 3: Vehicle Route Itinerary Breakdown */}
           <div>
-            <h3 className="text-xs font-mono text-[#ffb59e] uppercase tracking-wider mb-3">3. Vehicle Route Dispatch Itinerary</h3>
+            <h3 className="text-xs font-mono uppercase tracking-wider mb-3" style={{ color: 'var(--color-accent-soft)' }}>3. Vehicle Route Dispatch Itinerary</h3>
             {routes.length === 0 ? (
-              <div className="text-xs font-mono text-[#e6beb2]/60 bg-[#110b1b] p-4 rounded-xl border border-[#5c4037]/30 text-center">
+              <div className="text-xs font-mono p-4 rounded-xl text-center" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 60%, transparent)', backgroundColor: 'var(--color-bg-primary)', border: '1px solid color-mix(in srgb, var(--color-border) 30%, transparent)' }}>
                 Run an optimization to view detailed turn-by-turn vehicle dispatch logs.
               </div>
             ) : (
               <div className="space-y-3">
                 {routes.map((vRoute: any, idx: number) => (
-                  <div key={idx} className="bg-[#1e1929] border border-[#5c4037]/40 rounded-xl p-4 space-y-2">
-                    <div className="flex items-center justify-between border-b border-[#5c4037]/30 pb-2">
+                  <div key={idx} className="rounded-xl p-4 space-y-2" style={{ backgroundColor: 'var(--color-bg-tertiary)', border: '1px solid color-mix(in srgb, var(--color-border) 40%, transparent)' }}>
+                    <div className="flex items-center justify-between pb-2" style={{ borderBottom: '1px solid color-mix(in srgb, var(--color-border) 30%, transparent)' }}>
                       <div className="flex items-center gap-2">
-                        <Truck className="w-4 h-4 text-[#ff5719]" />
-                        <span className="font-semibold text-xs font-mono text-[#e9def5]">Vehicle #{vRoute.vehicle_id || idx + 1}</span>
+                        <Truck className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                        <span className="font-semibold text-xs font-mono" style={{ color: 'var(--color-text-primary)' }}>Vehicle #{vRoute.vehicle_id || idx + 1}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs font-mono text-[#e6beb2]/70">
+                      <div className="flex items-center gap-3 text-xs font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 70%, transparent)' }}>
                         <span>{vRoute.distance_km || 0} km</span>
                         <span>•</span>
                         <span>{vRoute.time_min || 0} min ({(((vRoute.time_min || 0)) / 60).toFixed(1)} hrs)</span>
                         <span>•</span>
-                        <span className="text-[#9dcaff]">{vRoute.stops?.length || 0} waypoints</span>
+                        <span style={{ color: 'var(--color-blue-accent)' }}>{vRoute.stops?.length || 0} waypoints</span>
                       </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       {vRoute.stops?.map((stop: any, sIdx: number) => (
                         <React.Fragment key={sIdx}>
-                          <span className="inline-flex items-center gap-1 bg-[#110b1b] border border-[#5c4037]/60 px-2 py-0.5 rounded text-[11px] font-mono text-[#e6beb2]">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono" style={{ backgroundColor: 'var(--color-bg-primary)', border: '1px solid color-mix(in srgb, var(--color-border) 60%, transparent)', color: 'var(--color-text-muted)' }}>
                             <span className="w-1.5 h-1.5 rounded-full bg-[#ff5719]"></span>
                             {stop.name || `Node ${sIdx}`}
                           </span>
                           {sIdx < vRoute.stops.length - 1 && (
-                            <span className="text-xs text-[#5c4037]">→</span>
+                            <span className="text-xs" style={{ color: 'var(--color-border)' }}>→</span>
                           )}
                         </React.Fragment>
                       ))}
@@ -287,18 +288,18 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
           {/* Section 4: Operational Recommendations */}
           <div>
-            <h3 className="text-xs font-mono text-[#ffb59e] uppercase tracking-wider mb-3">4. Dispatch Recommendations</h3>
-            <div className="bg-[#110b1b] border border-[#5c4037]/40 rounded-xl p-4 space-y-2 text-xs text-[#e6beb2]/80">
+            <h3 className="text-xs font-mono uppercase tracking-wider mb-3" style={{ color: 'var(--color-accent-soft)' }}>4. Dispatch Recommendations</h3>
+            <div className="rounded-xl p-4 space-y-2 text-xs" style={{ backgroundColor: 'var(--color-bg-primary)', border: '1px solid color-mix(in srgb, var(--color-border) 40%, transparent)', color: 'color-mix(in srgb, var(--color-text-muted) 80%, transparent)' }}>
               <div className="flex items-start gap-2">
-                <CheckCircle className="w-4 h-4 text-[#ff5719] shrink-0 mt-0.5" />
+                <CheckCircle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
                 <span>Quantum wave-collapse converged at global optimum with zero detected local minimum trapping.</span>
               </div>
               <div className="flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#9dcaff] shrink-0 mt-0.5" />
+                <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-blue-accent)' }} />
                 <span>All time-window constraints validated within standard SLA variance tolerance.</span>
               </div>
               <div className="flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-[#ffb59e] shrink-0 mt-0.5" />
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-accent-soft)' }} />
                 <span>Travel times reflect current traffic topology. Cross-check dynamically if severe weather advisories are posted.</span>
               </div>
             </div>
@@ -307,14 +308,15 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="bg-[#1e1929] border-t border-[#5c4037]/50 px-6 py-4 flex items-center justify-between">
-          <span className="text-[11px] font-mono text-[#e6beb2]/50">
+        <div className="px-6 py-4 flex items-center justify-between" style={{ backgroundColor: 'var(--color-bg-tertiary)', borderTop: '1px solid color-mix(in srgb, var(--color-border) 50%, transparent)' }}>
+          <span className="text-[11px] font-mono" style={{ color: 'color-mix(in srgb, var(--color-text-muted) 50%, transparent)' }}>
             Exported from QRoute23 Engine • Ready for distribution
           </span>
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-[#5c4037] text-xs font-semibold text-[#e9def5] hover:bg-[#221d2d] transition"
+              className="px-4 py-2 rounded-lg text-xs font-semibold transition"
+              style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }}
             >
               Close
             </button>

@@ -98,7 +98,7 @@ export const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
             if (results.length > 0) setOpen(true);
           }}
           placeholder={placeholder}
-          className="w-full bg-[#110b1b] border border-[#5c4037] rounded-lg pl-9 pr-9 py-2.5 text-sm text-[#e9def5] placeholder-[#e6beb2]/40 focus:outline-none focus:border-[#ffb59e] transition shadow-inner"
+          className="w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-lg pl-9 pr-9 py-2.5 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)]/40 focus:outline-none focus:border-[#ffb59e] transition shadow-inner"
         />
         {loading ? (
           <Loader2 className="absolute right-3 w-4 h-4 text-[#ffb59e] animate-spin" />
@@ -106,7 +106,7 @@ export const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-3 text-[#e6beb2]/60 hover:text-[#e9def5]"
+            className="absolute right-3 text-[var(--color-text-muted)]/60 hover:text-[var(--color-text-primary)]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -114,19 +114,19 @@ export const LocationSearchInput: React.FC<LocationSearchInputProps> = ({
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute z-50 mt-1 w-full bg-[#1e1929] border border-[#ffb59e]/40 rounded-lg shadow-2xl overflow-hidden max-h-60 overflow-y-auto">
+        <div className="absolute z-50 mt-1 w-full bg-[var(--color-bg-tertiary)] border border-[#ffb59e]/40 rounded-lg shadow-2xl overflow-hidden max-h-60 overflow-y-auto">
           {results.map((item, idx) => (
             <button
               key={idx}
               type="button"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleSelect(item)}
-              className="w-full text-left px-3.5 py-2.5 hover:bg-[#ff5719]/15 border-b border-[#5c4037]/30 last:border-none transition flex items-start gap-2.5 group cursor-pointer"
+              className="w-full text-left px-3.5 py-2.5 hover:bg-[#ff5719]/15 border-b border-[var(--color-border)]/30 last:border-none transition flex items-start gap-2.5 group cursor-pointer"
             >
               <Search className="w-4 h-4 text-[#ffb59e] mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
               <div className="min-w-0 flex-1">
-                <div className="text-xs font-semibold text-[#e9def5] group-hover:text-[#ffb59e] transition-colors">{item.name}</div>
-                <div className="text-[10px] font-mono text-[#e6beb2]/70 truncate mt-0.5">{item.display_name}</div>
+                <div className="text-xs font-semibold text-[var(--color-text-primary)] group-hover:text-[#ffb59e] transition-colors">{item.name}</div>
+                <div className="text-[10px] font-mono text-[var(--color-text-muted)]/70 truncate mt-0.5">{item.display_name}</div>
               </div>
             </button>
           ))}

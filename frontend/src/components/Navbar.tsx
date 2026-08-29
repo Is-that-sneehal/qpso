@@ -1,5 +1,6 @@
 import React from 'react';
 import { Zap } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps {
   currentTab: string;
@@ -19,13 +20,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#110b1b] border-b border-[#5c4037]/30 px-6 py-3 backdrop-blur-md">
+    <header className="sticky top-0 z-50 px-6 py-3 backdrop-blur-md" style={{ backgroundColor: 'var(--color-bg-primary)', borderBottom: '1px solid color-mix(in srgb, var(--color-border) 30%, transparent)' }}>
       <div className="max-w-[1440px] mx-auto flex items-center justify-between">
         
         {/* Brand logo & Wordmark */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSelectTab('dashboard')}>
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#ff5719] to-[#ffb59e] p-0.5 flex items-center justify-center shadow-lg shadow-[#ff5719]/20">
-            <div className="w-full h-full bg-[#161120] rounded-[7px] flex items-center justify-center">
+            <div className="w-full h-full rounded-[7px] flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
               {/* Hexagonal 6-node glyph with bolt */}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" stroke="#ffb59e" strokeWidth="1.5" strokeLinejoin="round"/>
@@ -40,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-lg tracking-tight text-[#e9def5]">Quantum Route</span>
+            <span className="font-bold text-lg tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Quantum Route</span>
           </div>
         </div>
 
@@ -52,11 +53,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
               <button
                 key={link.id}
                 onClick={() => onSelectTab(link.id)}
-                className={`text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'text-[#ffb59e] font-semibold border-b-2 border-[#ffb59e] pb-1'
-                    : 'text-[#e6beb2]/70 hover:text-[#e9def5]'
-                }`}
+                className={`text-sm font-medium transition-colors ${isActive ? 'font-semibold border-b-2 pb-1' : ''}`}
+                style={isActive ? { color: 'var(--color-accent-soft)', borderColor: 'var(--color-accent-soft)' } : { color: 'color-mix(in srgb, var(--color-text-muted) 70%, transparent)' }}
               >
                 {link.label}
               </button>
@@ -69,12 +67,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, onStart
           {onOpenReport && (
             <button
               onClick={onOpenReport}
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#ff5719]/60 text-[#ffb59e] hover:bg-[#ff5719]/10 transition"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition" style={{ border: '1px solid color-mix(in srgb, var(--color-accent) 60%, transparent)', color: 'var(--color-accent-soft)' }}
               title="View & Download Route Audit Report"
             >
               <span>📄 Report</span>
             </button>
           )}
+
+          <ThemeToggle />
 
           <button
             onClick={onStartOptimization}
