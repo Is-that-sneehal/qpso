@@ -1,5 +1,6 @@
 # logic.py
 import app as quantum_solver
+from qpso_vrp import solve_qpso_vrp
 
 def optimize_route_algo(start, stops, round_trip=False, fleet_size=1, quantum_params=None, use_qpso_v2=False):
     """
@@ -27,15 +28,21 @@ def optimize_route_algo(start, stops, round_trip=False, fleet_size=1, quantum_pa
     return routes, stats
 
 
-def optimize_route_qpso(start, stops, round_trip=False, fleet_size=1, quantum_params=None):
+def optimize_route_qpso(start, stops, round_trip=False,
+                        fleet_size=1, quantum_params=None):
     """
-    Direct QPSO VRP Router. Calls solve_qpso_vrp.
+    QPSO router. Same interface as optimize_route_algo().
+    Replaces SA with quantum-behaved particle swarm.
     """
-    from qpso_solver import solve_qpso_vrp
-    routes, stats = solve_qpso_vrp(start, stops, n_vehicles=fleet_size, q_params=quantum_params)
+    routes, stats = solve_qpso_vrp(
+        start, stops,
+        n_vehicles=fleet_size,
+        q_params=quantum_params
+    )
     if round_trip or fleet_size > 1:
         for i in range(len(routes)):
-            routes[i].append(routes[i][0])
+            if routes[i] and routes[i][-1] != routes[i][0]:
+                routes[i].append(routes[i][0])
     return routes, stats
 
 

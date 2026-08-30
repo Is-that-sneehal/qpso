@@ -11,6 +11,7 @@ import requests
 import numpy as np
 from geopy.distance import geodesic
 from sklearn.cluster import KMeans 
+from traffic_aware import apply_traffic_to_matrix
 
 # ======================================================
 # 1. GEOMETRY & DATA FETCHING
@@ -42,7 +43,8 @@ def build_matrices(nodes):
                 
                 print(f"[OK] OSRM Matrices generated for {n} nodes.")
                 # Return km and hours
-                return np.array(clean_dist) / 1000.0, np.array(clean_time) / 3600.0
+                raw_time = np.array(clean_time) / 3600.0
+                return np.array(clean_dist) / 1000.0, apply_traffic_to_matrix(raw_time)
     except Exception as e:
         print(f"[WARN] OSRM Matrix failed: {e}. Falling back to Geodesic.")
 
@@ -57,7 +59,7 @@ def build_matrices(nodes):
                 dist_matrix[i][j] = d
                 time_matrix[i][j] = d / 50.0 # Assume 50km/h avg speed
                 
-    return dist_matrix, time_matrix
+    return dist_matrix, apply_traffic_to_matrix(time_matrix)
 
 def calculate_energy(route_indices, dist_matrix, time_matrix, nodes):
     """

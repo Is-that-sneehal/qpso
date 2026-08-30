@@ -99,7 +99,7 @@ async def optimize_route(req: OptimizeRequest):
         # Calculate distance, duration, and road geometry for vehicle
         coords_seq = [list(n["coords"]) for n in opt_nodes]
         try:
-            from api import get_road_path
+            from backend.maps.road_path import get_road_path
             path_res = get_road_path(coords_seq)
             if len(path_res) == 4:
                 path_geo, v_dist_km, v_time_min, is_fallback = path_res

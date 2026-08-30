@@ -42,6 +42,11 @@ def build_distance_matrix(nodes, graph=None, speed_kmh=50.0):
                         dist_matrix[i][j] = dist_km
                         time_matrix[i][j] = time_hrs
                         
+            try:
+                from backend.maps.traffic_adjustment import apply_real_traffic
+                time_matrix = apply_real_traffic(time_matrix, nodes)
+            except Exception:
+                pass  # keep the existing matrix unmodified on any failure
             return dist_matrix, time_matrix
         except Exception as e:
             print(f"[WARN] Graph distance matrix computation failed ({e}), falling back to Geodesic.")
@@ -54,5 +59,11 @@ def build_distance_matrix(nodes, graph=None, speed_kmh=50.0):
                 t_hrs = d_km / speed_kmh
                 dist_matrix[i][j] = d_km
                 time_matrix[i][j] = t_hrs
-                
+
+    try:
+        from backend.maps.traffic_adjustment import apply_real_traffic
+        time_matrix = apply_real_traffic(time_matrix, nodes)
+    except Exception:
+        pass  # keep the existing matrix unmodified on any failure
+
     return dist_matrix, time_matrix

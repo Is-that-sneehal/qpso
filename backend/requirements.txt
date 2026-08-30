@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+numpy
+scikit-learn
+geopy
+osmnx
+networkx
+requests
+pandas
